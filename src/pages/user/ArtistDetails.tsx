@@ -6,7 +6,7 @@ import { GlowButton } from '../../components/ui/GlowButton';
 import { FloatingOrb } from '../../components/ui/FloatingOrb';
 import { 
   MapPin, CheckCircle2, DollarSign, Calendar, Clock,
-  Tag, Video, Music, Mail, Phone, ArrowLeft, Send
+  Tag, Video, Music, Mail, Phone, ArrowLeft, Send, Bookmark
 } from 'lucide-react';
 import { API_BASE_URL } from '../../config';
 import { useAuthStore } from '../../store/authStore';
@@ -42,6 +42,7 @@ export const ArtistDetails: React.FC = () => {
   const [events, setEvents] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeImage, setActiveImage] = useState<string>('');
+  const [isSaved, setIsSaved] = useState(false);
   
   // Booking Form State
   const [bookingForm, setBookingForm] = useState({
@@ -75,6 +76,43 @@ export const ArtistDetails: React.FC = () => {
     };
     fetchArtistDetails();
   }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      try {
+        const saved = localStorage.getItem('saved_artists');
+        if (saved) {
+          const ids = JSON.parse(saved);
+          if (Array.isArray(ids)) {
+            setIsSaved(ids.includes(id));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [id]);
+
+  const handleToggleSave = () => {
+    if (!id) return;
+    try {
+      const saved = localStorage.getItem('saved_artists');
+      let ids = saved ? JSON.parse(saved) : [];
+      if (!Array.isArray(ids)) ids = [];
+      
+      if (ids.includes(id)) {
+        ids = ids.filter((savedId: string) => savedId !== id);
+        setIsSaved(false);
+      } else {
+        ids.push(id);
+        setIsSaved(true);
+      }
+      localStorage.setItem('saved_artists', JSON.stringify(ids));
+      window.dispatchEvent(new Event('storage'));
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const handleBookingSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -189,6 +227,17 @@ export const ArtistDetails: React.FC = () => {
                 <span className="bg-green-500/10 text-green-400 border border-green-500/20 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5" /> Verified Goo Partner
                 </span>
+                <button
+                  onClick={handleToggleSave}
+                  className={`border text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
+                    isSaved 
+                      ? 'bg-[var(--accent-pink)]/20 border-[var(--accent-pink)] text-[var(--accent-pink)]' 
+                      : 'bg-white/5 border-white/10 text-[var(--text-secondary)] hover:bg-white/10 hover:text-white'
+                  }`}
+                >
+                  <Bookmark className={`w-3.5 h-3.5 ${isSaved ? 'fill-[var(--accent-pink)]' : ''}`} />
+                  {isSaved ? 'Saved' : 'Save Artist'}
+                </button>
               </div>
 
               <h1 className="text-4xl md:text-6xl font-display font-extrabold tracking-tight text-white leading-tight">

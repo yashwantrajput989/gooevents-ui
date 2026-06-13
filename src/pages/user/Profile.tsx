@@ -93,19 +93,21 @@ export const Profile: React.FC = () => {
                 ))}
               </div>
             )}
+            
+            {(user.role === 'admin' || user.role === 'superadmin') && (
+              <div className="pt-2 flex justify-center md:justify-start">
+                <button 
+                  onClick={() => navigate('/admin')}
+                  className="px-4 py-2 rounded-xl bg-[var(--violet-primary)]/20 border border-[var(--violet-primary)] text-[var(--violet-bright)] font-bold text-xs hover:bg-[var(--violet-primary)] hover:text-white transition-all cursor-pointer"
+                >
+                  Admin Dashboard
+                </button>
+              </div>
+            )}
           </div>
           <button className="absolute top-6 right-6 md:relative md:top-0 md:right-0 p-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
             <Settings className="w-5 h-5 text-[var(--text-muted)]" />
           </button>
-          
-          {(user.role === 'admin' || user.role === 'superadmin') && (
-            <button 
-              onClick={() => navigate('/admin')}
-              className="absolute bottom-6 right-6 md:relative md:bottom-0 md:right-0 px-4 py-2 rounded-xl bg-[var(--violet-primary)]/20 border border-[var(--violet-primary)] text-[var(--violet-bright)] font-bold text-xs hover:bg-[var(--violet-primary)] hover:text-white transition-all"
-            >
-              Admin Dashboard
-            </button>
-          )}
         </section>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

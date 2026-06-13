@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Sparkles, Music, Mic2, Star, Disc, Users, Smile, Compass } from 'lucide-react';
+import { Search, MapPin, Sparkles, Music, Mic2, Star, Disc, Users, Smile, Compass, Bookmark } from 'lucide-react';
 import { PageWrapper } from '../../components/layout/PageWrapper';
 import { FloatingOrb } from '../../components/ui/FloatingOrb';
 import { GlassCard } from '../../components/ui/GlassCard';
@@ -21,7 +21,45 @@ export const Artists: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [savedArtistIds, setSavedArtistIds] = useState<string[]>([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const loadSaved = () => {
+      try {
+        const saved = localStorage.getItem('saved_artists');
+        if (saved) {
+          setSavedArtistIds(JSON.parse(saved));
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    loadSaved();
+    window.addEventListener('storage', loadSaved);
+    return () => window.removeEventListener('storage', loadSaved);
+  }, []);
+
+  const toggleSaveArtist = (artistId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      const saved = localStorage.getItem('saved_artists');
+      let ids = saved ? JSON.parse(saved) : [];
+      if (!Array.isArray(ids)) ids = [];
+      
+      if (ids.includes(artistId)) {
+        ids = ids.filter((id: string) => id !== artistId);
+      } else {
+        ids.push(artistId);
+      }
+      setSavedArtistIds(ids);
+      localStorage.setItem('saved_artists', JSON.stringify(ids));
+      window.dispatchEvent(new Event('storage'));
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
     const fetchArtists = async () => {
@@ -135,6 +173,15 @@ export const Artists: React.FC = () => {
                     <div className="absolute top-4 left-4 z-10 bg-[var(--violet-primary)] text-white text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                       {artist.category || 'Talent'}
                     </div>
+
+                    {/* Bookmark Toggle Overlay */}
+                    <button
+                      onClick={(e) => toggleSaveArtist(artist.id, e)}
+                      className="absolute top-4 right-14 z-20 w-7 h-7 bg-black/60 hover:bg-black/80 backdrop-blur-md border border-white/10 rounded-lg flex items-center justify-center text-white active:scale-90 transition-all cursor-pointer animate-fade-in"
+                      title={savedArtistIds.includes(artist.id) ? "Remove from saved" : "Save Artist"}
+                    >
+                      <Bookmark className={`w-3.5 h-3.5 ${savedArtistIds.includes(artist.id) ? 'fill-[var(--accent-pink)] text-[var(--accent-pink)]' : 'text-white'}`} />
+                    </button>
 
                     {/* Rating Overlay */}
                     <div className="absolute top-4 right-4 z-10 bg-black/40 backdrop-blur-md border border-white/10 px-2 py-0.5 rounded-lg flex items-center gap-1">

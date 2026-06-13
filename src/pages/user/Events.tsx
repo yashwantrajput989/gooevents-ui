@@ -6,7 +6,7 @@ import { EventCard } from '../../components/events/EventCard';
 import { useLocationStore } from '../../store/locationStore';
 import { LocationPrompt } from '../../components/events/LocationPrompt';
 import { ComingSoon } from '../../components/ui/ComingSoon';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { Avatar } from '../../components/ui/Avatar';
 import { API_BASE_URL, getImageUrl } from '../../config';
@@ -28,9 +28,31 @@ export const Events: React.FC = () => {
   const { city: detectedCity, detectLocation } = useLocationStore();
   const [activeCity, setActiveCity] = useState<string>('Visakhapatnam');
   const [activeCategory, setActiveCategory] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchParam = searchParams.get('search') || '';
+  const [searchQuery, setSearchQuery] = useState(searchParam);
   const navigate = useNavigate();
   const { user } = useAuthStore();
+
+  useEffect(() => {
+    if (searchParam) {
+      setSearchQuery(searchParam);
+    }
+  }, [searchParam]);
+
+  const handleSearchBlurOrEnter = (query: string) => {
+    if (!query || query.trim().length < 2) return;
+    try {
+      const saved = localStorage.getItem('recent_searches');
+      let queries: string[] = saved ? JSON.parse(saved) : [];
+      queries = queries.filter(q => q.toLowerCase() !== query.toLowerCase());
+      queries.unshift(query.trim());
+      if (queries.length > 5) queries.pop();
+      localStorage.setItem('recent_searches', JSON.stringify(queries));
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   useEffect(() => { detectLocation(); }, []);
   useEffect(() => { if (detectedCity) setActiveCity(detectedCity); }, [detectedCity]);
@@ -64,7 +86,7 @@ export const Events: React.FC = () => {
       <FloatingOrb className="-top-40 -left-20" color="violet" size={400} />
       <FloatingOrb className="bottom-0 right-0" color="cyan" size={300} delay={2} />
 
-      <div className="relative z-10">
+      <div className="relative z-10 w-full max-w-full overflow-x-hidden">
 
         {/* ━━━ MOBILE HEADER (hidden on md+) ━━━ */}
         <div className="md:hidden mb-6 space-y-4">
@@ -107,7 +129,20 @@ export const Events: React.FC = () => {
               type="text"
               placeholder="Search events..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                if (e.target.value === '') {
+                  setSearchParams({});
+                } else {
+                  setSearchParams({ search: e.target.value });
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSearchBlurOrEnter(searchQuery);
+                }
+              }}
+              onBlur={() => handleSearchBlurOrEnter(searchQuery)}
               className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3.5 text-sm text-white outline-none focus:border-[var(--violet-bright)]/50 focus:bg-white/10 transition-all placeholder:text-[var(--text-muted)]"
             />
           </div>
@@ -131,7 +166,20 @@ export const Events: React.FC = () => {
                 type="text"
                 placeholder="Search events, artists, venues..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  if (e.target.value === '') {
+                    setSearchParams({});
+                  } else {
+                    setSearchParams({ search: e.target.value });
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearchBlurOrEnter(searchQuery);
+                  }
+                }}
+                onBlur={() => handleSearchBlurOrEnter(searchQuery)}
                 className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-3.5 text-sm outline-none focus:bg-white/10 focus:border-[var(--violet-bright)]/50 transition-all"
               />
             </div>
@@ -147,13 +195,13 @@ export const Events: React.FC = () => {
         </div>
 
         {/* ━━━ CATEGORY STRIP ━━━ */}
-        <div className="overflow-x-auto scrollbar-hide -mx-4 px-4 mb-8 md:mb-12">
-          <div className="flex gap-4 md:gap-6 min-w-max pb-2">
+        <div className="w-full overflow-x-auto scrollbar-hide -mx-4 px-4 mb-8 md:mb-12">
+          <div className="flex gap-6 md:gap-8 min-w-max pb-2">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className="flex flex-col items-center gap-2 flex-shrink-0 group"
+                className="flex flex-col items-center gap-2 flex-shrink-0 w-16 md:w-20 group"
               >
                 <div className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center transition-all duration-300 ${
                   activeCategory === cat.id
@@ -164,7 +212,7 @@ export const Events: React.FC = () => {
                     activeCategory === cat.id ? 'text-white' : 'text-[var(--text-muted)] group-hover:text-white'
                   }`} />
                 </div>
-                <span className={`text-[9px] md:text-[10px] font-bold tracking-widest transition-colors ${
+                <span className={`text-[9px] md:text-[10px] font-bold tracking-wider text-center uppercase transition-colors w-full ${
                   activeCategory === cat.id ? 'text-white' : 'text-[var(--text-muted)] group-hover:text-white'
                 }`}>{cat.name}</span>
               </button>
@@ -269,7 +317,7 @@ export const Events: React.FC = () => {
               </div>
 
               {filteredEvents.length === 0 ? (
-                <div className="py-16 text-center space-y-2">
+                <div className="py-16 text-center space-y-2 w-full mx-auto flex flex-col items-center justify-center">
                   <p className="text-lg font-bold text-white">No events found</p>
                   <p className="text-sm text-[var(--text-muted)]">Try a different category or search term.</p>
                 </div>

@@ -4,8 +4,7 @@ import { Navbar } from './components/layout/Navbar';
 import { Sidebar } from './components/layout/Sidebar';
 import { AuthModal } from './components/ui/AuthModal';
 import { Events } from './pages/user/Events';
-import { Social } from './pages/user/Social';
-import { Community } from './pages/user/Community';
+import { Activity } from './pages/user/Activity';
 import { Profile } from './pages/user/Profile';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { CreateEvent } from './pages/admin/CreateEvent';
@@ -66,8 +65,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/events" element={<Events />} />
             <Route path="/events/:id" element={<EventDetails />} />
-            <Route path="/social" element={<Social />} />
-            <Route path="/community" element={<Community />} />
+            <Route path="/activity" element={<Activity />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/artists" element={<Artists />} />
             <Route path="/artists/:id" element={<ArtistDetails />} />
