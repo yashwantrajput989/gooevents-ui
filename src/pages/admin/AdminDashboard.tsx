@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { GlowButton } from '../../components/ui/GlowButton';
 import { useAuthStore } from '../../store/authStore';
 import { API_BASE_URL, getImageUrl } from '../../config';
+import { AdminLogin } from './AdminLogin';
 
 export const AdminDashboard: React.FC = () => {
   const { user } = useAuthStore();
@@ -22,7 +23,10 @@ export const AdminDashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchDashboardData = async () => {
-    if (!user) return;
+    if (!user) {
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
     try {
       const response = await fetch(`${API_BASE_URL}/api/admin/dashboard/${user.id}`);
@@ -108,6 +112,10 @@ export const AdminDashboard: React.FC = () => {
         </div>
       </PageWrapper>
     );
+  }
+
+  if (!user || user.role !== 'admin') {
+    return <AdminLogin forcedRole="admin" />;
   }
 
   const isVerified = company?.verified;
