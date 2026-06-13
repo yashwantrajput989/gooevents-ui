@@ -1,0 +1,122 @@
+.home-page {
+  width: 100%;
+}
+
+.hero {
+  position: relative;
+  height: 80vh;
+  display: flex;
+  align-items: center;
+  padding: 0 5%;
+  overflow: hidden;
+  margin-bottom: 60px;
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 100%),
+              linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 50%);
+  z-index: -1;
+}
+
+.hero-content {
+  max-width: 700px;
+}
+
+.hero-tag {
+  display: inline-block;
+  padding: 6px 12px;
+  background: var(--glass);
+  border: 1px solid var(--accent);
+  border-radius: 20px;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.hero-content h1 {
+  font-size: clamp(36px, 8vw, 64px);
+  line-height: 1.1;
+  margin-bottom: 24px;
+}
+
+.hero-content p {
+  font-size: clamp(16px, 3vw, 20px);
+  color: var(--text-secondary);
+  margin-bottom: 40px;
+}
+
+.shows-section {
+  margin-bottom: 60px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.section-header h2 {
+  font-size: clamp(24px, 5vw, 32px);
+}
+
+.view-all {
+  background: transparent;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.shows-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  font-size: 20px;
+  color: var(--accent);
+}
+
+@media (max-width: 768px) {
+  .hero {
+    height: 60vh;
+    padding: 0 24px;
+  }
+  .shows-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .shows-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero {
+    height: 50vh;
+  }
+}
