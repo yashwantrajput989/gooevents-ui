@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { PageWrapper } from '../../components/layout/PageWrapper';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { GlowButton } from '../../components/ui/GlowButton';
-import { User, Mail, Phone, Globe, CreditCard, Save, Sparkles, Video, Image, Music } from 'lucide-react';
+import { User, Mail, Phone, Globe, CreditCard, Save, Sparkles, Video, Image, Music, X } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL, getImageUrl } from '../../config';
 
 const InstagramIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -27,6 +27,7 @@ export const AdminSettings: React.FC = () => {
   const { user } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
   const [company, setCompany] = useState<any>(null);
+  const [galleryList, setGalleryList] = useState<string[]>([]);
   
   const [formData, setFormData] = useState({
     companyName: '',
@@ -54,6 +55,8 @@ export const AdminSettings: React.FC = () => {
           const data = await response.json();
           const comp = data.company;
           setCompany(comp);
+          const imgs = Array.isArray(comp.gallery_images) ? comp.gallery_images : [];
+          setGalleryList(imgs);
           setFormData({
             companyName: comp.name || '',
             email: comp.contact_email || user.email || '',
@@ -63,7 +66,7 @@ export const AdminSettings: React.FC = () => {
             payoutUpi: comp.payout_upi || '',
             category: comp.category || 'DJ',
             genres: Array.isArray(comp.genres) ? comp.genres.join(', ') : '',
-            galleryImages: Array.isArray(comp.gallery_images) ? comp.gallery_images.join(', ') : '',
+            galleryImages: '',
             videoUrl: comp.video_url || '',
             bookingPrice: comp.booking_price ? String(comp.booking_price) : '',
             instagram: comp.social_links?.instagram || '',
@@ -98,7 +101,7 @@ export const AdminSettings: React.FC = () => {
           contact_email: formData.email,
           category: formData.category,
           genres: formData.genres.split(',').map(s => s.trim()).filter(Boolean),
-          gallery_images: formData.galleryImages.split(',').map(s => s.trim()).filter(Boolean),
+          gallery_images: galleryList,
           video_url: formData.videoUrl,
           booking_price: parseFloat(formData.bookingPrice) || 0,
           social_links: {
@@ -227,18 +230,70 @@ export const AdminSettings: React.FC = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-[var(--text-muted)] uppercase">Gallery Image URLs (Comma separated)</label>
-                <div className="relative">
-                  <Image className="absolute left-4 top-4 w-4 h-4 text-[var(--text-muted)]" />
-                  <textarea 
-                    rows={3}
-                    value={formData.galleryImages}
-                    onChange={(e) => setFormData({...formData, galleryImages: e.target.value})}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 focus:border-[var(--violet-bright)] outline-none transition-all resize-none"
-                    placeholder="https://images.unsplash.com/photo-1, https://images.unsplash.com/photo-2"
+              <div className="space-y-4">
+                <label className="text-xs font-bold text-[var(--text-muted)] uppercase">Showcase Gallery Images</label>
+                
+                {/* Upload Button/Area */}
+                <div className="relative border-2 border-dashed border-white/10 hover:border-[var(--violet-bright)] rounded-2xl p-6 transition-colors group flex flex-col items-center justify-center cursor-pointer text-center bg-white/5">
+                  <input 
+                    type="file" 
+                    accept="image/*"
+                    multiple
+                    onChange={async (e) => {
+                      const files = e.target.files;
+                      if (!files) return;
+                      for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        const uploadData = new FormData();
+                        uploadData.append('image', file);
+                        try {
+                          const response = await fetch(`${API_BASE_URL}/upload`, {
+                            method: 'POST',
+                            body: uploadData
+                          });
+                          const data = await response.json();
+                          if (data.url) {
+                            setGalleryList(prev => [...prev, data.url]);
+                          }
+                        } catch (error) {
+                          console.error('Showcase image upload failed:', error);
+                        }
+                      }
+                    }}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                   />
+                  <Image className="w-8 h-8 text-[var(--text-muted)] mb-2 group-hover:text-[var(--violet-bright)] transition-colors" />
+                  <p className="text-sm font-bold text-white group-hover:text-[var(--violet-bright)] transition-colors">
+                    Upload Showcase Images
+                  </p>
+                  <p className="text-xs text-[var(--text-muted)] mt-1">PNG, JPG or WebP (Max 5MB each)</p>
                 </div>
+
+                {/* Uploaded Gallery Grid */}
+                {galleryList.length > 0 && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
+                    {galleryList.map((url, idx) => (
+                      <div key={idx} className="relative group aspect-square rounded-xl overflow-hidden bg-black/40 border border-white/10">
+                        <img 
+                          src={getImageUrl(url)} 
+                          alt={`Showcase ${idx + 1}`}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setGalleryList(prev => prev.filter((_, i) => i !== idx));
+                            }}
+                            className="p-2 bg-red-500/80 hover:bg-red-500 rounded-full text-white transition-colors"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </GlassCard>

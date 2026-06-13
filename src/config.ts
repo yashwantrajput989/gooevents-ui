@@ -3,11 +3,11 @@
 const isProduction = import.meta.env.PROD;
 
 export const API_BASE_URL = isProduction 
-  ? '/api' 
+  ? 'https://api.gooevents.in/api' 
   : 'http://localhost:5000/api';
 
 export const IMAGE_BASE_URL = isProduction 
-  ? '' 
+  ? 'https://api.gooevents.in' 
   : 'http://localhost:5000';
 
 // Helper to format image URLs
