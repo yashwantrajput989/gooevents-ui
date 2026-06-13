@@ -25,6 +25,105 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
+      {/* Global Mobile Top Header */}
+      <header className="md:hidden fixed top-0 left-0 right-0 z-50 h-16 bg-[var(--bg-primary)]/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-4">
+        {/* Left: Brand Logo & Title */}
+        <NavLink to="/events" className="flex items-center gap-2">
+          <span className="font-display font-black text-xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-[var(--violet-bright)] to-[var(--accent-pink)]">
+            Goo Events
+          </span>
+        </NavLink>
+
+        {/* Right: Notifications & Profile Avatar */}
+        <div className="flex items-center gap-2">
+          {/* Notifications Trigger */}
+          <div className="relative">
+            <button 
+              onClick={() => setShowNotifications(!showNotifications)}
+              className="relative w-8.5 h-8.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white active:scale-95 transition-all hover:bg-white/10"
+            >
+              <Bell className="w-4 h-4" />
+              {(tickets.length > 0 || (user && !user.onboarded)) && (
+                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[var(--accent-pink)] border border-[var(--bg-primary)] animate-pulse" />
+              )}
+            </button>
+
+            {/* Mobile Notification Popdown */}
+            <AnimatePresence>
+              {showNotifications && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                  className="absolute top-full right-0 mt-2 w-72 z-50"
+                >
+                  <GlassCard className="p-4 shadow-glow border-[var(--violet-primary)]/20">
+                    <h4 className="font-display font-bold text-xs mb-3 text-white">Notifications</h4>
+                    <div className="space-y-2.5 max-h-72 overflow-y-auto scrollbar-none">
+                      {user && !user.onboarded && (
+                        <div 
+                          className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 flex gap-2.5 cursor-pointer hover:bg-amber-500/20 transition-colors"
+                          onClick={() => {
+                            setShowNotifications(false);
+                            openModal('auth');
+                          }}
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0">
+                            <User className="w-4 h-4 text-amber-500" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[10px] font-bold text-amber-500 leading-tight">Complete Profile</p>
+                            <p className="text-[8px] text-amber-200/80 leading-normal mt-0.5">Add your interests to personalize your experience.</p>
+                          </div>
+                        </div>
+                      )}
+                      {tickets.length === 0 && (!user || user.onboarded) ? (
+                        <p className="text-xs text-[var(--text-muted)] text-center py-4">No new notifications</p>
+                      ) : (
+                        tickets.map(ticket => (
+                          <div key={ticket.id} className="p-2.5 rounded-xl bg-white/5 border border-white/5 flex gap-2.5 relative group">
+                            <div className="w-8 h-8 rounded-lg bg-[var(--violet-primary)]/20 flex items-center justify-center shrink-0">
+                              <Sparkles className="w-4 h-4 text-[var(--violet-bright)]" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[10px] font-bold text-white leading-tight">Booking Confirmed!</p>
+                              <p className="text-[8px] text-[var(--text-secondary)] leading-normal mt-0.5">Your tickets for {ticket.eventTitle} are ready.</p>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </GlassCard>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Profile Avatar / Auth trigger */}
+          {user ? (
+            <NavLink
+              to="/profile"
+              className="w-8.5 h-8.5 rounded-xl overflow-hidden border border-[var(--violet-bright)]/30 active:scale-95 transition-all focus:outline-none ring-2 ring-[var(--violet-bright)]/10 shadow-[0_0_10px_rgba(249,115,22,0.2)] shrink-0"
+            >
+              {user.avatar_url ? (
+                <img src={user.avatar_url} alt="" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-[var(--violet-primary)]/20 flex items-center justify-center">
+                  <User className="w-4 h-4 text-[var(--violet-bright)]" />
+                </div>
+              )}
+            </NavLink>
+          ) : (
+            <button
+              onClick={() => openModal('auth')}
+              className="px-2 py-1 xs:px-3.5 xs:py-1.5 rounded-xl bg-[var(--violet-primary)] hover:bg-[var(--violet-bright)] text-white text-[9px] xs:text-[10px] font-extrabold active:scale-95 transition-all shadow-[0_0_15px_rgba(249,115,22,0.3)] flex items-center gap-1 border border-white/10 shrink-0 uppercase tracking-wider min-w-0"
+            >
+              <LogIn className="w-3.5 h-3.5 shrink-0" /> <span className="truncate">Sign In</span>
+            </button>
+          )}
+        </div>
+      </header>
+
       {/* Mobile Bottom Nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 glass-card rounded-none border-x-0 border-b-0 border-t border-white/5 bg-[var(--bg-card)]/90 backdrop-blur-xl pb-safe">
         <div className="flex items-center justify-around px-2 py-3">
