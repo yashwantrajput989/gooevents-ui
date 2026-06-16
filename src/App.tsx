@@ -17,6 +17,9 @@ import { EventDetails } from './pages/user/EventDetails';
 import { Dashboard } from './pages/user/Dashboard';
 import { Artists } from './pages/user/Artists';
 import { ArtistDetails } from './pages/user/ArtistDetails';
+import { Organize } from './pages/user/Organize';
+import { ArtistOnboarding } from './pages/user/ArtistOnboarding';
+import { OpenMics } from './pages/user/OpenMics';
 
 import { useAuthStore } from './store/authStore';
 import { useEffect } from 'react';
@@ -38,7 +41,7 @@ function App() {
   // Global redirect when user logs in
   useEffect(() => {
     if (user && location.pathname === '/') {
-      navigate('/events', { replace: true });
+      navigate('/dashboard', { replace: true });
     }
   }, [user, location.pathname, navigate]);
 
@@ -61,11 +64,14 @@ function App() {
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             {/* User Routes */}
-            <Route path="/" element={<Navigate to="/events" replace />} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/events" element={<Events />} />
             <Route path="/events/:id" element={<EventDetails />} />
             <Route path="/activity" element={<Activity />} />
+            <Route path="/organize" element={<Organize />} />
+            <Route path="/artist-onboarding" element={<ArtistOnboarding />} />
+            <Route path="/openmics" element={<OpenMics />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/artists" element={<Artists />} />
             <Route path="/artists/:id" element={<ArtistDetails />} />

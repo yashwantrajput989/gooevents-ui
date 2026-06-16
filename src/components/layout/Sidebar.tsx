@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Users, User, Zap, Settings, LayoutDashboard, Sparkles, Bookmark } from 'lucide-react';
+import { Home, Users, User, Zap, Settings, LayoutDashboard, Sparkles, Calendar } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { motion } from 'framer-motion';
 
@@ -10,9 +10,10 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isAdmin = false }) => {
   const userNavItems = [
-    { label: 'Events', path: '/events', icon: Home },
+    { label: 'Home', path: '/dashboard', icon: Home },
+    { label: 'Events', path: '/events', icon: Calendar },
     { label: 'Artists', path: '/artists', icon: Sparkles },
-    { label: 'Activity', path: '/activity', icon: Bookmark },
+    { label: 'Organize', path: '/organize', icon: Zap },
     { label: 'Profile', path: '/profile', icon: User },
   ];
 
