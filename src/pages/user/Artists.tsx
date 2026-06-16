@@ -1,20 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Sparkles, Music, Mic2, Star, Disc, Users, Smile, Compass, Bookmark } from 'lucide-react';
+import { Search, MapPin, Sparkles, Music, Mic2, Star, Disc, Users, Smile, Compass, Bookmark, ArrowRight, Zap } from 'lucide-react';
 import { PageWrapper } from '../../components/layout/PageWrapper';
 import { FloatingOrb } from '../../components/ui/FloatingOrb';
 import { GlassCard } from '../../components/ui/GlassCard';
+import { GlowButton } from '../../components/ui/GlowButton';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../../config';
 
 const CATEGORIES = [
-  { id: 'all', name: 'ALL talent', icon: Compass },
-  { id: 'DJ', name: 'DJs / Producers', icon: Disc },
-  { id: 'Singer', name: 'Singers / Solo', icon: Music },
-  { id: 'Comedian', name: 'Comedians', icon: Mic2 },
-  { id: 'Band', name: 'Bands / Groups', icon: Users },
-  { id: 'Dancer', name: 'Dancers / Acts', icon: Sparkles },
-  { id: 'Host', name: 'Hosts / MCs', icon: Smile },
+  { id: 'all', name: 'All Artists', icon: Compass },
+  { id: 'DJ', name: 'DJs', icon: Disc },
+  { id: 'Singer', name: 'Singers', icon: Music },
+  { id: 'Comedian', name: 'Comedy', icon: Mic2 },
+  { id: 'Band', name: 'Bands', icon: Users },
+  { id: 'Dancer', name: 'Dancers', icon: Sparkles },
+  { id: 'Instrumentalist', name: 'Instrumentalists', icon: Music },
+  { id: 'Anchor', name: 'Anchors / MCs', icon: Smile },
 ];
+
+// Static ratings for display
+const ARTIST_RATINGS: Record<string, number> = {
+  'comp_test_1': 4.9,
+  'comp_test_2': 4.8,
+  'comp_test_3': 4.7,
+  'comp_neha_sharma': 4.8,
+  'comp_local_train': 4.9,
+  'comp_priya_dance': 4.6,
+  'comp_sitar_maestro': 4.9,
+  'comp_dj_blaze': 4.7,
+  'comp_anchor_vikram': 4.8,
+  'comp_rnb_strings': 4.8,
+};
 
 export const Artists: React.FC = () => {
   const [artists, setArtists] = useState<any[]>([]);
@@ -28,14 +44,9 @@ export const Artists: React.FC = () => {
     const loadSaved = () => {
       try {
         const saved = localStorage.getItem('saved_artists');
-        if (saved) {
-          setSavedArtistIds(JSON.parse(saved));
-        }
-      } catch (e) {
-        console.error(e);
-      }
+        if (saved) setSavedArtistIds(JSON.parse(saved));
+      } catch (e) { console.error(e); }
     };
-
     loadSaved();
     window.addEventListener('storage', loadSaved);
     return () => window.removeEventListener('storage', loadSaved);
@@ -45,20 +56,13 @@ export const Artists: React.FC = () => {
     e.stopPropagation();
     try {
       const saved = localStorage.getItem('saved_artists');
-      let ids = saved ? JSON.parse(saved) : [];
+      let ids: string[] = saved ? JSON.parse(saved) : [];
       if (!Array.isArray(ids)) ids = [];
-      
-      if (ids.includes(artistId)) {
-        ids = ids.filter((id: string) => id !== artistId);
-      } else {
-        ids.push(artistId);
-      }
+      ids = ids.includes(artistId) ? ids.filter((id) => id !== artistId) : [...ids, artistId];
       setSavedArtistIds(ids);
       localStorage.setItem('saved_artists', JSON.stringify(ids));
       window.dispatchEvent(new Event('storage'));
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) { console.error(err); }
   };
 
   useEffect(() => {
@@ -79,154 +83,249 @@ export const Artists: React.FC = () => {
 
   const filteredArtists = artists.filter(a => {
     const matchesCategory = activeCategory === 'all' || (a.category && a.category.toLowerCase() === activeCategory.toLowerCase());
-    const matchesSearch = !searchQuery || 
-      a.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    const matchesSearch = !searchQuery ||
+      a.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (a.genres && a.genres.some((g: string) => g.toLowerCase().includes(searchQuery.toLowerCase())));
     return matchesCategory && matchesSearch;
   });
 
+  const featuredArtist = filteredArtists[0];
+  const restArtists = filteredArtists.slice(1);
+
   return (
-    <PageWrapper>
+    <PageWrapper className="pb-24">
       <FloatingOrb className="-top-40 -left-20" color="violet" size={400} />
       <FloatingOrb className="bottom-0 right-0" color="cyan" size={300} delay={2} />
 
-      <div className="relative z-10 pb-16">
-        
-        {/* Header Title */}
-        <header className="mb-10 text-center md:text-left space-y-4">
+      <div className="relative z-10 space-y-6 md:space-y-10">
+
+        {/* ── PAGE HEADER ── */}
+        <header className="text-center md:text-left space-y-3 pt-2">
           <div className="flex items-center justify-center md:justify-start gap-2">
-            <Sparkles className="w-5 h-5 text-[var(--violet-bright)] animate-bounce" />
+            <Sparkles className="w-4 h-4 text-[var(--violet-bright)] animate-bounce" />
             <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--violet-bright)]">Verified Talent Agency</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-display font-extrabold tracking-tight leading-tight">
+          <h1 className="text-3xl md:text-6xl font-display font-extrabold tracking-tight leading-tight">
             Book Premium <span className="text-gradient">Artists</span>
           </h1>
-          <p className="text-[var(--text-secondary)] max-w-xl text-sm md:text-base font-medium mx-auto md:mx-0">
-            Hire award-winning DJs, stand-up comics, live acoustic bands, and MCs directly for your clubs, private shows, or large concerts.
+          <p className="text-[var(--text-secondary)] text-sm md:text-base font-medium max-w-xl mx-auto md:mx-0">
+            Hire award-winning DJs, comedians, live bands, dancers & MCs directly for weddings, college fests, or concerts.
           </p>
         </header>
 
-        {/* Search Bar */}
-        <div className="relative max-w-xl mb-12 mx-auto md:mx-0">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-muted)]" />
+        {/* ── SEARCH ── */}
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" />
           <input
             type="text"
-            placeholder="Search artists by name, genres..."
+            placeholder="Search by name, genre..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-sm text-white outline-none focus:border-[var(--violet-bright)]/50 focus:bg-white/10 transition-all placeholder:text-[var(--text-muted)]"
+            className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-4 py-3.5 text-sm text-white outline-none focus:border-[var(--violet-bright)]/50 focus:bg-white/8 transition-all placeholder:text-[var(--text-muted)]"
           />
         </div>
 
-        {/* Category Strip */}
-        <div className="overflow-x-auto scrollbar-hide -mx-4 px-4 mb-10">
-          <div className="flex gap-4 min-w-max pb-2">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`flex items-center gap-2 px-5 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider border transition-all ${
-                  activeCategory === cat.id
-                    ? 'bg-[var(--violet-primary)] border-[var(--violet-primary)] text-white shadow-glow'
-                    : 'bg-white/5 border-white/10 text-[var(--text-secondary)] hover:bg-white/10 hover:text-white'
-                }`}
-              >
-                <cat.icon className="w-4 h-4" />
-                <span>{cat.name}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Talent Grid */}
-        {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-pulse">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="aspect-[4/5] rounded-3xl bg-white/5 border border-white/5" />
-            ))}
-          </div>
-        ) : filteredArtists.length === 0 ? (
-          <div className="py-20 text-center bg-white/3 border border-white/5 rounded-3xl space-y-2">
-            <Compass className="w-12 h-12 text-[var(--text-muted)] mx-auto" />
-            <p className="text-lg font-bold text-white">No Artists Found</p>
-            <p className="text-sm text-[var(--text-muted)]">We couldn't find any verified artists matching your search filters.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {filteredArtists.map((artist) => {
-              const coverImg = artist.gallery_images?.[0] || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1000';
+        {/* ── CATEGORY CHIPS (horizontally scrollable) ── */}
+        <div className="overflow-x-auto scrollbar-hide -mx-4 px-4">
+          <div className="flex gap-2 min-w-max pb-1">
+            {CATEGORIES.map((cat) => {
+              const Icon = cat.icon;
               return (
-                <GlassCard 
-                  key={artist.id}
-                  onClick={() => navigate(`/artists/${artist.id}`)}
-                  className="p-0 overflow-hidden cursor-pointer flex flex-col justify-between group hover:border-[var(--border-glow)] hover:shadow-glow duration-300"
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider border whitespace-nowrap transition-all ${
+                    activeCategory === cat.id
+                      ? 'bg-[var(--violet-primary)] border-[var(--violet-primary)] text-white shadow-glow'
+                      : 'bg-white/5 border-white/10 text-[var(--text-secondary)] hover:bg-white/10 hover:text-white'
+                  }`}
                 >
-                  <div className="relative aspect-[4/4] overflow-hidden">
-                    <img 
-                      src={coverImg} 
-                      alt={artist.name} 
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
-                    
-                    {/* Category Overlay */}
-                    <div className="absolute top-4 left-4 z-10 bg-[var(--violet-primary)] text-white text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                      {artist.category || 'Talent'}
-                    </div>
-
-                    {/* Bookmark Toggle Overlay */}
-                    <button
-                      onClick={(e) => toggleSaveArtist(artist.id, e)}
-                      className="absolute top-4 right-14 z-20 w-7 h-7 bg-black/60 hover:bg-black/80 backdrop-blur-md border border-white/10 rounded-lg flex items-center justify-center text-white active:scale-90 transition-all cursor-pointer animate-fade-in"
-                      title={savedArtistIds.includes(artist.id) ? "Remove from saved" : "Save Artist"}
-                    >
-                      <Bookmark className={`w-3.5 h-3.5 ${savedArtistIds.includes(artist.id) ? 'fill-[var(--accent-pink)] text-[var(--accent-pink)]' : 'text-white'}`} />
-                    </button>
-
-                    {/* Rating Overlay */}
-                    <div className="absolute top-4 right-4 z-10 bg-black/40 backdrop-blur-md border border-white/10 px-2 py-0.5 rounded-lg flex items-center gap-1">
-                      <Star className="w-3 h-3 text-[var(--violet-glow)] fill-[var(--violet-glow)]" />
-                      <span className="text-[10px] font-bold text-white">4.9</span>
-                    </div>
-
-                    {/* Stage Name / Location in overlay */}
-                    <div className="absolute bottom-4 left-4 right-4 z-10 text-white space-y-1">
-                      <h3 className="text-lg font-display font-extrabold group-hover:text-[var(--violet-bright)] transition-colors leading-tight line-clamp-1">
-                        {artist.name}
-                      </h3>
-                      <div className="flex items-center gap-1 text-[10px] text-white/80 font-medium">
-                        <MapPin className="w-3 h-3 text-[var(--violet-bright)]" />
-                        <span>{artist.city}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Pricing / Booking Quote Details */}
-                  <div className="p-5 bg-[var(--bg-card)] border-t border-white/5 space-y-4">
-                    <div className="flex flex-wrap gap-1">
-                      {artist.genres && artist.genres.slice(0, 3).map((g: string, idx: number) => (
-                        <span key={idx} className="text-[9px] font-semibold bg-white/5 border border-white/10 text-white/70 px-2 py-0.5 rounded-md">
-                          {g}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="flex items-center justify-between border-t border-white/5 pt-3">
-                      <div>
-                        <p className="text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-widest">Hire Rate</p>
-                        <p className="text-sm font-extrabold text-[var(--violet-bright)]">₹{(artist.booking_price || 15000).toLocaleString()}+</p>
-                      </div>
-                      <span className="text-xs font-bold text-white group-hover:text-[var(--violet-bright)] transition-colors flex items-center gap-1">
-                        View Profile &rarr;
-                      </span>
-                    </div>
-                  </div>
-                </GlassCard>
+                  <Icon className="w-3.5 h-3.5" />
+                  {cat.name}
+                </button>
               );
             })}
           </div>
-        )}
+        </div>
 
+        {/* ── LOADING SKELETON ── */}
+        {isLoading ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5 animate-pulse">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="rounded-2xl bg-white/5 border border-white/5 aspect-[3/4]" />
+            ))}
+          </div>
+        ) : filteredArtists.length === 0 ? (
+          <div className="py-16 text-center bg-white/3 border border-white/5 rounded-3xl space-y-3">
+            <Compass className="w-10 h-10 text-[var(--text-muted)] mx-auto" />
+            <p className="font-bold text-white">No Artists Found</p>
+            <p className="text-xs text-[var(--text-muted)] px-8">We couldn't find verified artists matching your filters.</p>
+          </div>
+        ) : (
+          <>
+            {/* ── FEATURED SPOTLIGHT (first artist) ── */}
+            {featuredArtist && !searchQuery && activeCategory === 'all' && (
+              <div
+                onClick={() => navigate(`/artists/${featuredArtist.id}`)}
+                className="relative rounded-3xl overflow-hidden cursor-pointer group border border-white/10 hover:border-[var(--border-glow)] transition-all duration-300 shadow-glow"
+              >
+                {/* Hero Image */}
+                <div className="relative h-56 md:h-80 overflow-hidden">
+                  <img
+                    src={featuredArtist.gallery_images?.[0] || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1400'}
+                    alt={featuredArtist.name}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                </div>
+
+                {/* Content over image */}
+                <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-8">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1.5 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[9px] bg-[var(--violet-primary)] text-white font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                          ⭐ Featured
+                        </span>
+                        <span className="text-[9px] bg-white/10 text-white/80 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider border border-white/10">
+                          {featuredArtist.category}
+                        </span>
+                      </div>
+                      <h2 className="text-xl md:text-3xl font-display font-extrabold text-white leading-tight line-clamp-1">
+                        {featuredArtist.name}
+                      </h2>
+                      <div className="flex items-center gap-3 text-xs text-white/70">
+                        <span className="flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-[var(--violet-bright)]" />
+                          {featuredArtist.city}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                          {ARTIST_RATINGS[featuredArtist.id] || '4.9'}
+                        </span>
+                        <span className="font-bold text-[var(--violet-bright)]">
+                          ₹{(featuredArtist.booking_price || 15000).toLocaleString()}+
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap gap-1 pt-1">
+                        {(featuredArtist.genres || []).slice(0, 3).map((g: string, i: number) => (
+                          <span key={i} className="text-[9px] font-semibold bg-white/10 border border-white/10 text-white/70 px-2 py-0.5 rounded">
+                            {g}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <GlowButton className="shrink-0 text-xs py-2.5 px-5 hidden md:flex items-center gap-2">
+                      Book Now <ArrowRight className="w-3.5 h-3.5" />
+                    </GlowButton>
+                  </div>
+
+                  {/* Mobile book button */}
+                  <div className="mt-3 md:hidden">
+                    <GlowButton className="w-full text-xs py-2.5">
+                      View & Book <ArrowRight className="w-3.5 h-3.5 inline ml-1" />
+                    </GlowButton>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── RESULTS COUNT ── */}
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
+                {filteredArtists.length} Artists Available
+              </p>
+              <div className="flex items-center gap-1.5 text-[10px] font-bold text-[var(--violet-bright)]">
+                <Zap className="w-3 h-3" /> Instant Booking
+              </div>
+            </div>
+
+            {/* ── ARTIST GRID (2-col mobile, 3-col tablet, 4-col desktop) ── */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
+              {restArtists.map((artist) => {
+                const coverImg = artist.gallery_images?.[0] || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=800';
+                const rating = ARTIST_RATINGS[artist.id] || (4.5 + Math.random() * 0.5).toFixed(1);
+                const isSaved = savedArtistIds.includes(artist.id);
+
+                return (
+                  <GlassCard
+                    key={artist.id}
+                    onClick={() => navigate(`/artists/${artist.id}`)}
+                    className="p-0 overflow-hidden cursor-pointer group hover:border-[var(--border-glow)] hover:shadow-glow transition-all duration-300"
+                  >
+                    {/* Cover image */}
+                    <div className="relative overflow-hidden aspect-square">
+                      <img
+                        src={coverImg}
+                        alt={artist.name}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+
+                      {/* Category pill */}
+                      <div className="absolute top-2 left-2 z-10 bg-[var(--violet-primary)]/90 backdrop-blur-sm text-white text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                        {artist.category || 'Artist'}
+                      </div>
+
+                      {/* Bookmark */}
+                      <button
+                        onClick={(e) => toggleSaveArtist(artist.id, e)}
+                        className={`absolute top-2 right-2 z-20 w-7 h-7 rounded-lg flex items-center justify-center transition-all active:scale-90 ${
+                          isSaved
+                            ? 'bg-[var(--accent-pink)]/20 border border-[var(--accent-pink)]/40'
+                            : 'bg-black/50 backdrop-blur-md border border-white/10 hover:bg-black/70'
+                        }`}
+                      >
+                        <Bookmark className={`w-3.5 h-3.5 ${isSaved ? 'fill-[var(--accent-pink)] text-[var(--accent-pink)]' : 'text-white'}`} />
+                      </button>
+
+                      {/* Rating */}
+                      <div className="absolute bottom-2 right-2 z-10 bg-black/50 backdrop-blur-sm border border-white/10 px-1.5 py-0.5 rounded-md flex items-center gap-0.5">
+                        <Star className="w-2.5 h-2.5 text-amber-400 fill-amber-400" />
+                        <span className="text-[9px] font-bold text-white">{rating}</span>
+                      </div>
+                    </div>
+
+                    {/* Details */}
+                    <div className="p-3 space-y-2">
+                      <div>
+                        <h3 className="text-sm font-extrabold text-white leading-tight line-clamp-1 group-hover:text-[var(--violet-bright)] transition-colors">
+                          {artist.name}
+                        </h3>
+                        <div className="flex items-center gap-1 mt-0.5 text-[10px] text-[var(--text-muted)]">
+                          <MapPin className="w-2.5 h-2.5 text-[var(--violet-bright)] shrink-0" />
+                          <span className="truncate">{artist.city}</span>
+                        </div>
+                      </div>
+
+                      {/* Genre tags – max 2 on mobile */}
+                      {artist.genres && artist.genres.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {artist.genres.slice(0, 2).map((g: string, idx: number) => (
+                            <span key={idx} className="text-[8px] font-semibold bg-white/5 border border-white/10 text-white/60 px-1.5 py-0.5 rounded">
+                              {g}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="flex items-center justify-between pt-1 border-t border-white/5">
+                        <p className="text-xs font-extrabold text-[var(--violet-bright)]">
+                          ₹{(artist.booking_price || 15000).toLocaleString()}+
+                        </p>
+                        <span className="text-[10px] font-bold text-white/50 group-hover:text-[var(--violet-bright)] transition-colors">
+                          Hire →
+                        </span>
+                      </div>
+                    </div>
+                  </GlassCard>
+                );
+              })}
+            </div>
+          </>
+        )}
       </div>
     </PageWrapper>
   );

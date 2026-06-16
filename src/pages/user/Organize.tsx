@@ -197,23 +197,23 @@ export const Organize: React.FC = () => {
   };
 
   return (
-    <PageWrapper className="relative pb-24 pt-6">
+    <PageWrapper className="relative pb-24 pt-4">
       <FloatingOrb className="top-0 -left-20" color="violet" size={400} />
       <FloatingOrb className="bottom-0 right-0" color="cyan" size={300} delay={1.5} />
 
-      <div className="relative z-10 max-w-5xl mx-auto px-4 space-y-10">
+      <div className="relative z-10 max-w-5xl mx-auto px-0 md:px-4 space-y-6 md:space-y-10">
         
         {/* Header Tab navigation */}
-        <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-white/5 pb-6">
+        <header className="flex flex-col gap-4 border-b border-white/5 pb-5">
           <div className="space-y-1">
-            <h1 className="text-4xl font-display font-extrabold text-white">Organize & Partner</h1>
-            <p className="text-sm text-[var(--text-secondary)]">Host events or list your venue to connect with Goo Events creators.</p>
+            <h1 className="text-2xl md:text-4xl font-display font-extrabold text-white">Organize & Partner</h1>
+            <p className="text-xs md:text-sm text-[var(--text-secondary)]">Host events or list your venue to connect with Goo Events creators.</p>
           </div>
           
-          <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 w-fit shrink-0">
+          <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 w-full md:w-fit">
             <button
               onClick={() => setActiveTab('organize')}
-              className={`px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors ${
+              className={`flex-1 md:flex-none px-4 md:px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors ${
                 activeTab === 'organize' ? 'bg-[var(--violet-primary)] text-white shadow-glow' : 'text-[var(--text-secondary)] hover:text-white'
               }`}
             >
@@ -221,20 +221,20 @@ export const Organize: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveTab('venue')}
-              className={`px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors ${
+              className={`flex-1 md:flex-none px-4 md:px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors ${
                 activeTab === 'venue' ? 'bg-[var(--violet-primary)] text-white shadow-glow' : 'text-[var(--text-secondary)] hover:text-white'
               }`}
             >
-              List Venue Partner
+              List Venue
             </button>
           </div>
         </header>
 
         {activeTab === 'organize' ? (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 md:gap-8">
             
             {/* Left Column: Organizer steps / Wizard */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-5 md:space-y-6">
               
               {!user ? (
                 <GlassCard className="p-8 text-center space-y-4">
@@ -261,7 +261,7 @@ export const Organize: React.FC = () => {
                         <p className="text-xs text-[var(--text-muted)] font-medium">Fill in the core idea of your event below.</p>
                       </div>
 
-                      <GlassCard className="p-8 space-y-6">
+                      <GlassCard className="p-5 md:p-8 space-y-5 md:space-y-6">
                         <div className="space-y-2">
                           <label className="text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Event Title</label>
                           <input 
@@ -270,7 +270,7 @@ export const Organize: React.FC = () => {
                             value={eventTitle}
                             onChange={(e) => setEventTitle(e.target.value)}
                             placeholder="e.g. Acoustic Evening, Open Mic Night"
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-[var(--violet-bright)] text-white"
+                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 outline-none focus:border-[var(--violet-bright)] text-white text-sm"
                           />
                         </div>
 
@@ -350,7 +350,7 @@ export const Organize: React.FC = () => {
                         <p className="text-xs text-[var(--text-muted)] font-medium">Select a venue partner to request stage space.</p>
                       </div>
 
-                      <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 scrollbar-none">
+                      <div className="space-y-3 max-h-[50vh] md:max-h-[400px] overflow-y-auto pr-1 scrollbar-none">
                         {venues.length === 0 ? (
                           <div className="text-center p-8 bg-white/5 rounded-2xl text-xs text-[var(--text-secondary)]">
                             No verified venues available in {eventCity} right now. You can draft a custom venue or list one in the other tab.
@@ -413,8 +413,8 @@ export const Organize: React.FC = () => {
                         <p className="text-xs text-[var(--text-muted)] font-medium">Select free ticketing or set a customizable pricing tier.</p>
                       </div>
 
-                      <GlassCard className="p-8 space-y-6">
-                        <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10">
+                      <GlassCard className="p-5 md:p-8 space-y-5 md:space-y-6">
+                        <div className="flex items-center justify-between p-3.5 md:p-4 rounded-xl bg-white/5 border border-white/10">
                           <div>
                             <h4 className="font-bold text-white text-sm">Make it Free</h4>
                             <p className="text-[10px] text-[var(--text-muted)] mt-0.5">Allow users to register and perform for free.</p>
