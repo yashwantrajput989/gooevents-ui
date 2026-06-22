@@ -8,7 +8,7 @@ import {
   MapPin, CheckCircle2, DollarSign, Calendar, Clock,
   Tag, Video, Music, Mail, Phone, ArrowLeft, Send, Bookmark
 } from 'lucide-react';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL, getImageUrl } from '../../config';
 import { useAuthStore } from '../../store/authStore';
 import { AnimatePresence } from 'framer-motion';
 
@@ -59,7 +59,7 @@ export const ArtistDetails: React.FC = () => {
     const fetchArtistDetails = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`${API_BASE_URL}/api/artists/${id}`);
+        const response = await fetch(`${API_BASE_URL}/artists/${id}`);
         if (response.ok) {
           const data = await response.json();
           setArtist(data.artist || null);
@@ -127,7 +127,7 @@ export const ArtistDetails: React.FC = () => {
     
     setIsSubmitting(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/artists/${artist.id}/book`, {
+      const response = await fetch(`${API_BASE_URL}/artists/${artist.id}/book`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -203,35 +203,35 @@ export const ArtistDetails: React.FC = () => {
           {/* Background Blurred Wallpaper */}
           <div className="absolute inset-0 z-0">
             <img 
-              src={artist.gallery_images?.[0] || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1000'} 
+              src={getImageUrl(artist.gallery_images?.[0])} 
               alt="" 
               className="w-full h-full object-cover blur-2xl opacity-40 scale-110"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
           </div>
 
-          <div className="relative z-10 p-8 md:p-14 flex flex-col md:flex-row gap-8 items-center md:items-end">
-            <div className="w-48 h-48 md:w-56 md:h-56 rounded-3xl overflow-hidden border border-white/20 shadow-glow flex-shrink-0">
+          <div className="relative z-10 p-6 md:p-14 flex flex-col md:flex-row gap-6 md:gap-8 items-center md:items-end">
+            <div className="w-40 h-40 md:w-56 md:h-56 rounded-3xl overflow-hidden border border-white/20 shadow-glow flex-shrink-0">
               <img 
-                src={artist.gallery_images?.[0] || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1000'} 
+                src={getImageUrl(artist.gallery_images?.[0])} 
                 alt={artist.name} 
                 className="w-full h-full object-cover"
               />
             </div>
             
             <div className="flex-1 space-y-4 text-center md:text-left">
-              <div className="flex flex-wrap justify-center md:justify-start items-center gap-2.5">
+              <div className="flex flex-wrap justify-center md:justify-start items-center gap-2">
                 <span className="bg-[var(--violet-primary)] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
                   {artist.category || 'Artist'}
                 </span>
-                <span className="bg-green-500/10 text-green-400 border border-green-500/20 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1">
+                <span className="bg-green-500/10 text-green-400 border border-green-500/20 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
                   <CheckCircle2 className="w-3.5 h-3.5" /> Verified Goo Partner
                 </span>
                 <button
                   onClick={handleToggleSave}
-                  className={`border text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer ${
+                  className={`border text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer shadow-sm ${
                     isSaved 
-                      ? 'bg-[var(--accent-pink)]/20 border-[var(--accent-pink)] text-[var(--accent-pink)]' 
+                      ? 'bg-[var(--accent-pink)]/20 border-[var(--accent-pink)] text-[var(--accent-pink)] shadow-[0_0_15px_rgba(239,68,68,0.15)]' 
                       : 'bg-white/5 border-white/10 text-[var(--text-secondary)] hover:bg-white/10 hover:text-white'
                   }`}
                 >
@@ -312,23 +312,23 @@ export const ArtistDetails: React.FC = () => {
                 {/* Active Image Frame */}
                 <div className="aspect-[16/9] w-full rounded-2xl overflow-hidden border border-white/10 bg-black">
                   <img 
-                    src={activeImage || artist.gallery_images[0]} 
+                    src={getImageUrl(activeImage || artist.gallery_images[0])} 
                     alt="Artist Showcase" 
                     className="w-full h-full object-cover"
                   />
                 </div>
 
                 {/* Thumbnails list */}
-                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4">
                   {artist.gallery_images.map((imgUrl: string, idx: number) => (
                     <button
                       key={idx}
                       onClick={() => setActiveImage(imgUrl)}
                       className={`w-24 h-16 rounded-xl overflow-hidden border-2 flex-shrink-0 transition-all ${
-                        activeImage === imgUrl ? 'border-[var(--violet-bright)] scale-95 shadow-glow' : 'border-white/10 hover:border-white/30'
+                        activeImage === imgUrl || (!activeImage && idx === 0) ? 'border-[var(--violet-bright)] scale-95 shadow-glow' : 'border-white/10 hover:border-white/30'
                       }`}
                     >
-                      <img src={imgUrl} alt="" className="w-full h-full object-cover" />
+                      <img src={getImageUrl(imgUrl)} alt="" className="w-full h-full object-cover" />
                     </button>
                   ))}
                 </div>
@@ -398,27 +398,27 @@ export const ArtistDetails: React.FC = () => {
 
               <form onSubmit={handleBookingSubmit} className="space-y-4">
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold uppercase text-[var(--text-secondary)]">Event Date</label>
+                  <label className="block text-left w-full text-[10px] font-bold uppercase text-[var(--text-secondary)]">Event Date</label>
                   <div className="relative">
                     <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" />
                     <input 
                       type="date" 
                       value={bookingForm.eventDate}
                       onChange={(e) => setBookingForm({...bookingForm, eventDate: e.target.value})}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white outline-none focus:border-[var(--violet-bright)]"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white outline-none focus:border-[var(--violet-bright)] focus:bg-white/8 transition-all"
                       required
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold uppercase text-[var(--text-secondary)]">Gig Category</label>
+                  <label className="block text-left w-full text-[10px] font-bold uppercase text-[var(--text-secondary)]">Gig Category</label>
                   <div className="relative">
                     <Tag className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" />
                     <select 
                       value={bookingForm.eventType}
                       onChange={(e) => setBookingForm({...bookingForm, eventType: e.target.value})}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white outline-none focus:border-[var(--violet-bright)] [&>option]:bg-[#121214]"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white outline-none focus:border-[var(--violet-bright)] focus:bg-white/8 transition-all [&>option]:bg-[#121214]"
                     >
                       <option value="Club Gigs">Club Gigs / Lounges</option>
                       <option value="Concerts">Public Concerts</option>
@@ -429,7 +429,7 @@ export const ArtistDetails: React.FC = () => {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold uppercase text-[var(--text-secondary)]">Performance Hours</label>
+                  <label className="block text-left w-full text-[10px] font-bold uppercase text-[var(--text-secondary)]">Performance Hours</label>
                   <div className="relative">
                     <Clock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" />
                     <input 
@@ -438,32 +438,32 @@ export const ArtistDetails: React.FC = () => {
                       max="8"
                       value={bookingForm.durationHours}
                       onChange={(e) => setBookingForm({...bookingForm, durationHours: e.target.value})}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white outline-none focus:border-[var(--violet-bright)]"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white outline-none focus:border-[var(--violet-bright)] focus:bg-white/8 transition-all"
                       required
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold uppercase text-[var(--text-secondary)]">Propose Booking Budget (₹ INR)</label>
+                  <label className="block text-left w-full text-[10px] font-bold uppercase text-[var(--text-secondary)]">Propose Booking Budget (₹ INR)</label>
                   <input 
                     type="number" 
                     placeholder={`e.g. ${artist.booking_price || 15000}`}
                     value={bookingForm.budget}
                     onChange={(e) => setBookingForm({...bookingForm, budget: e.target.value})}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-[var(--violet-bright)]"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-[var(--violet-bright)] focus:bg-white/8 transition-all"
                     required
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold uppercase text-[var(--text-secondary)]">Request Message / Venue Location</label>
+                  <label className="block text-left w-full text-[10px] font-bold uppercase text-[var(--text-secondary)]">Request Message / Venue Location</label>
                   <textarea 
                     rows={3}
                     placeholder="Provide details about your stage space, audience volume, and requirements..."
                     value={bookingForm.message}
                     onChange={(e) => setBookingForm({...bookingForm, message: e.target.value})}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-[var(--violet-bright)] resize-none"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-[var(--violet-bright)] focus:bg-white/8 transition-all resize-none"
                   />
                 </div>
 

@@ -26,6 +26,7 @@ interface UserProfile {
   phone?: string;
   onboarded?: boolean;
   interests?: string[];
+  email_verified?: boolean;
 }
 
 interface AuthState {
@@ -37,7 +38,7 @@ interface AuthState {
   setSession: (session: any | null) => void;
   setLoading: (loading: boolean) => void;
   loginWithGoogle: () => Promise<UserProfile | void>;
-  loginAdmin: (role: 'admin' | 'superadmin', password: string) => Promise<void>;
+  loginAdmin: (email: string, role: 'admin' | 'superadmin', password: string) => Promise<void>;
   loginWithPhone: (phone: string) => Promise<void>;
   verifyOTP: (phone: string, token: string, fullName?: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -55,44 +56,32 @@ export const useAuthStore = create<AuthState>()(
       setSession: (session) => set({ session }),
       setLoading: (loading) => set({ isLoading: loading }),
       
-      loginAdmin: async (role, password) => {
+      loginAdmin: async (email, role, password) => {
         set({ isLoading: true });
-        // Simulating network delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        if (password === 'ingo1234' || password === 'gooevents1234') {
-          const mockUser: UserProfile = {
-            id: `mock-${role}-123`,
-            full_name: role === 'admin' ? 'Admin User' : 'Super Admin',
-            username: role,
-            email: `${role}@gooevents.com`,
-            avatar_url: `https://api.dicebear.com/7.x/avataaars/svg?seed=${role}`,
-            role: role,
-            v_coins: 9999,
-            city: 'Mumbai',
-          };
-
-          // Sync with Local express backend
-          try {
-            await fetch(`${API_BASE_URL}/auth/sync`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(mockUser)
-            });
-          } catch (syncError) {
-            console.error('Failed to sync admin with Express:', syncError);
-          }
-
-          set({
-            user: mockUser,
-            isLoading: false,
-            session: { user: { id: `mock-${role}-123` } }
+        try {
+          const res = await fetch(`${API_BASE_URL}/auth/login-admin`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, role, password })
           });
-          logToBackend('admin_login_success', { role });
-        } else {
+          if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.error || 'Invalid credentials or role');
+          }
+          const userProfile = await res.json();
+          set({
+            user: {
+              ...userProfile,
+              v_coins: userProfile.v_coins || 0
+            },
+            isLoading: false,
+            session: { user: { id: userProfile.id } }
+          });
+          logToBackend('admin_login_success', { role, email });
+        } catch (error: any) {
           set({ isLoading: false });
-          logToBackend('admin_login_failed', { role });
-          throw new Error('Invalid password');
+          logToBackend('admin_login_failed', { role, email, error: error.message });
+          throw error;
         }
       },
 

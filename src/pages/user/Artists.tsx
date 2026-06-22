@@ -5,7 +5,7 @@ import { FloatingOrb } from '../../components/ui/FloatingOrb';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { GlowButton } from '../../components/ui/GlowButton';
 import { useNavigate } from 'react-router-dom';
-import { API_BASE_URL } from '../../config';
+import { API_BASE_URL, getImageUrl } from '../../config';
 
 const CATEGORIES = [
   { id: 'all', name: 'All Artists', icon: Compass },
@@ -69,7 +69,7 @@ export const Artists: React.FC = () => {
     const fetchArtists = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch(`${API_BASE_URL}/api/artists`);
+        const res = await fetch(`${API_BASE_URL}/artists`);
         const data = await res.json();
         setArtists(Array.isArray(data) ? data : []);
       } catch (e) {
@@ -170,63 +170,62 @@ export const Artists: React.FC = () => {
                 className="relative rounded-3xl overflow-hidden cursor-pointer group border border-white/10 hover:border-[var(--border-glow)] transition-all duration-300 shadow-glow"
               >
                 {/* Hero Image */}
-                <div className="relative h-56 md:h-80 overflow-hidden">
+                <div className="relative h-64 md:h-96 overflow-hidden">
                   <img
-                    src={featuredArtist.gallery_images?.[0] || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1400'}
+                    src={getImageUrl(featuredArtist.gallery_images?.[0])}
                     alt={featuredArtist.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-750 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent z-0" />
                 </div>
 
-                {/* Content over image */}
-                <div className="absolute inset-0 flex flex-col justify-end p-5 md:p-8">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="space-y-1.5 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-[9px] bg-[var(--violet-primary)] text-white font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                          ⭐ Featured
-                        </span>
-                        <span className="text-[9px] bg-white/10 text-white/80 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider border border-white/10">
-                          {featuredArtist.category}
-                        </span>
-                      </div>
-                      <h2 className="text-xl md:text-3xl font-display font-extrabold text-white leading-tight line-clamp-1">
-                        {featuredArtist.name}
-                      </h2>
-                      <div className="flex items-center gap-3 text-xs text-white/70">
-                        <span className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-[var(--violet-bright)]" />
-                          {featuredArtist.city}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
-                          {ARTIST_RATINGS[featuredArtist.id] || '4.9'}
-                        </span>
-                        <span className="font-bold text-[var(--violet-bright)]">
-                          ₹{(featuredArtist.booking_price || 15000).toLocaleString()}+
-                        </span>
-                      </div>
-                      <div className="flex flex-wrap gap-1 pt-1">
-                        {(featuredArtist.genres || []).slice(0, 3).map((g: string, i: number) => (
-                          <span key={i} className="text-[9px] font-semibold bg-white/10 border border-white/10 text-white/70 px-2 py-0.5 rounded">
-                            {g}
+                {/* Content Panel (Glassmorphism overlay) */}
+                <div className="absolute bottom-0 left-0 right-0 p-3 md:p-6 z-10">
+                  <div className="glass-card bg-black/60 backdrop-blur-md border border-white/10 p-4 md:p-6 rounded-2xl space-y-2 md:space-y-3 shadow-2xl">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div className="space-y-1.5 min-w-0 text-left">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-[9px] bg-gradient-to-r from-amber-500 to-[var(--violet-primary)] text-white font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-[0_0_10px_rgba(249,115,22,0.3)]">
+                            ⭐ Featured
                           </span>
-                        ))}
+                          <span className="text-[9px] bg-white/10 text-white/90 font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-white/10">
+                            {featuredArtist.category}
+                          </span>
+                        </div>
+                        
+                        <h2 className="text-xl md:text-3xl font-display font-extrabold text-white leading-tight line-clamp-1">
+                          {featuredArtist.name}
+                        </h2>
+                        
+                        <div className="flex items-center gap-3 text-xs text-white/80 flex-wrap">
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-3.5 h-3.5 text-[var(--violet-bright)]" />
+                            {featuredArtist.city}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                            {ARTIST_RATINGS[featuredArtist.id] || '4.9'}
+                          </span>
+                          <span className="font-extrabold text-[var(--violet-bright)]">
+                            ₹{(featuredArtist.booking_price || 15000).toLocaleString()}+
+                          </span>
+                        </div>
+                        
+                        <div className="flex flex-wrap gap-1.5 pt-1">
+                          {(featuredArtist.genres || []).slice(0, 3).map((g: string, i: number) => (
+                            <span key={i} className="text-[9px] font-semibold bg-white/5 border border-white/5 text-white/70 px-2 py-0.5 rounded-md">
+                              {g}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="shrink-0">
+                        <GlowButton className="text-xs py-2.5 px-6 flex items-center gap-2 w-full md:w-auto justify-center">
+                          Book Now <ArrowRight className="w-3.5 h-3.5" />
+                        </GlowButton>
                       </div>
                     </div>
-
-                    <GlowButton className="shrink-0 text-xs py-2.5 px-5 hidden md:flex items-center gap-2">
-                      Book Now <ArrowRight className="w-3.5 h-3.5" />
-                    </GlowButton>
-                  </div>
-
-                  {/* Mobile book button */}
-                  <div className="mt-3 md:hidden">
-                    <GlowButton className="w-full text-xs py-2.5">
-                      View & Book <ArrowRight className="w-3.5 h-3.5 inline ml-1" />
-                    </GlowButton>
                   </div>
                 </div>
               </div>
@@ -242,10 +241,10 @@ export const Artists: React.FC = () => {
               </div>
             </div>
 
-            {/* ── ARTIST GRID (2-col mobile, 3-col tablet, 4-col desktop) ── */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
+            {/* ── ARTIST GRID (1-col mobile, 2-col tablet, 4-col desktop) ── */}
+            <div className="grid grid-cols-1 min-[450px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
               {restArtists.map((artist) => {
-                const coverImg = artist.gallery_images?.[0] || 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=800';
+                const coverImg = getImageUrl(artist.gallery_images?.[0]);
                 const rating = ARTIST_RATINGS[artist.id] || (4.5 + Math.random() * 0.5).toFixed(1);
                 const isSaved = savedArtistIds.includes(artist.id);
 
@@ -256,23 +255,23 @@ export const Artists: React.FC = () => {
                     className="p-0 overflow-hidden cursor-pointer group hover:border-[var(--border-glow)] hover:shadow-glow transition-all duration-300"
                   >
                     {/* Cover image */}
-                    <div className="relative overflow-hidden aspect-square">
+                    <div className="relative overflow-hidden aspect-[16/10]">
                       <img
                         src={coverImg}
                         alt={artist.name}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
 
                       {/* Category pill */}
-                      <div className="absolute top-2 left-2 z-10 bg-[var(--violet-primary)]/90 backdrop-blur-sm text-white text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                      <div className="absolute top-2.5 left-2.5 z-10 bg-[var(--violet-primary)]/90 backdrop-blur-sm text-white text-[8px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                         {artist.category || 'Artist'}
                       </div>
 
                       {/* Bookmark */}
                       <button
                         onClick={(e) => toggleSaveArtist(artist.id, e)}
-                        className={`absolute top-2 right-2 z-20 w-7 h-7 rounded-lg flex items-center justify-center transition-all active:scale-90 ${
+                        className={`absolute top-2.5 right-2.5 z-20 w-7 h-7 rounded-lg flex items-center justify-center transition-all active:scale-90 ${
                           isSaved
                             ? 'bg-[var(--accent-pink)]/20 border border-[var(--accent-pink)]/40'
                             : 'bg-black/50 backdrop-blur-md border border-white/10 hover:bg-black/70'
@@ -282,41 +281,44 @@ export const Artists: React.FC = () => {
                       </button>
 
                       {/* Rating */}
-                      <div className="absolute bottom-2 right-2 z-10 bg-black/50 backdrop-blur-sm border border-white/10 px-1.5 py-0.5 rounded-md flex items-center gap-0.5">
+                      <div className="absolute bottom-2.5 right-2.5 z-10 bg-black/50 backdrop-blur-sm border border-white/10 px-1.5 py-0.5 rounded-md flex items-center gap-0.5">
                         <Star className="w-2.5 h-2.5 text-amber-400 fill-amber-400" />
                         <span className="text-[9px] font-bold text-white">{rating}</span>
                       </div>
                     </div>
 
                     {/* Details */}
-                    <div className="p-3 space-y-2">
+                    <div className="p-4 space-y-3 text-left">
                       <div>
-                        <h3 className="text-sm font-extrabold text-white leading-tight line-clamp-1 group-hover:text-[var(--violet-bright)] transition-colors">
+                        <h3 className="text-base font-extrabold text-white leading-tight line-clamp-1 group-hover:text-[var(--violet-bright)] transition-colors">
                           {artist.name}
                         </h3>
-                        <div className="flex items-center gap-1 mt-0.5 text-[10px] text-[var(--text-muted)]">
-                          <MapPin className="w-2.5 h-2.5 text-[var(--violet-bright)] shrink-0" />
+                        <div className="flex items-center gap-1 mt-1 text-[11px] text-[var(--text-secondary)]">
+                          <MapPin className="w-3 h-3 text-[var(--violet-bright)] shrink-0" />
                           <span className="truncate">{artist.city}</span>
                         </div>
                       </div>
 
-                      {/* Genre tags – max 2 on mobile */}
+                      {/* Genre tags */}
                       {artist.genres && artist.genres.length > 0 && (
                         <div className="flex flex-wrap gap-1">
                           {artist.genres.slice(0, 2).map((g: string, idx: number) => (
-                            <span key={idx} className="text-[8px] font-semibold bg-white/5 border border-white/10 text-white/60 px-1.5 py-0.5 rounded">
+                            <span key={idx} className="text-[9px] font-semibold bg-white/5 border border-white/10 text-white/70 px-2 py-0.5 rounded">
                               {g}
                             </span>
                           ))}
                         </div>
                       )}
 
-                      <div className="flex items-center justify-between pt-1 border-t border-white/5">
-                        <p className="text-xs font-extrabold text-[var(--violet-bright)]">
-                          ₹{(artist.booking_price || 15000).toLocaleString()}+
-                        </p>
-                        <span className="text-[10px] font-bold text-white/50 group-hover:text-[var(--violet-bright)] transition-colors">
-                          Hire →
+                      <div className="flex items-center justify-between pt-2 border-t border-white/5">
+                        <div>
+                          <span className="text-[8px] uppercase tracking-wider text-[var(--text-muted)] block">Starts from</span>
+                          <p className="text-xs font-extrabold text-[var(--violet-bright)]">
+                            ₹{(artist.booking_price || 15000).toLocaleString()}+
+                          </p>
+                        </div>
+                        <span className="text-xs font-bold text-[var(--violet-bright)] bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg group-hover:bg-[var(--violet-primary)] group-hover:text-white transition-all">
+                          Hire
                         </span>
                       </div>
                     </div>

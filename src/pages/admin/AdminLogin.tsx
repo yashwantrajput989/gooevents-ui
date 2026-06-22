@@ -42,7 +42,7 @@ export const AdminLogin: React.FC<{ forcedRole?: 'admin' | 'superadmin' }> = ({ 
     }
 
     try {
-      await loginAdmin(role, password);
+      await loginAdmin(email, role, password);
       navigate(role === 'superadmin' ? '/superadmin' : '/admin');
     } catch (error: any) {
       alert(error.message || 'Login failed. Please check your credentials.');

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PageWrapper } from '../../components/layout/PageWrapper';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { GlowButton } from '../../components/ui/GlowButton';
-import { User, Mail, Phone, Globe, CreditCard, Save, Sparkles, Video, Image, Music, X } from 'lucide-react';
+import { User, Mail, Phone, Globe, CreditCard, Save, Sparkles, Video, Image, Music, X, Users } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { API_BASE_URL, getImageUrl } from '../../config';
 
@@ -10,7 +10,7 @@ const InstagramIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+    <line x1="17.5" y1="6.5" y2="6.5" />
   </svg>
 );
 
@@ -21,13 +21,24 @@ const YoutubeIcon: React.FC<{ className?: string }> = ({ className }) => (
   </svg>
 );
 
-const CATEGORY_OPTIONS = ['DJ', 'Singer', 'Comedian', 'Band', 'Dancer', 'Host'];
+const CATEGORY_MAP: Record<string, string[]> = {
+  'Solo Artist': ['Singer', 'Singer-Guitarist', 'Instrumentalist'],
+  'Duo & Trio': ['Acoustic Duo', 'Acoustic Trio'],
+  'Live Band': ['Bollywood', 'Indie', 'Sufi', 'Fusion', 'Regional', 'Retro', 'Rock', 'Jazz'],
+  'Instrumental': ['Violin', 'Saxophone', 'Piano', 'Flute', 'Guitar', 'Percussion'],
+  'Traditional & Folk': ['Dhol', 'Qawwali', 'Folk Groups', 'Cultural Performers'],
+  'DJ': ['DJ Only', 'DJ + Live Act', 'Club DJ', 'Event DJ'],
+  'Hosts & Comedy': ['Emcee/Anchor', 'Wedding Anchor', 'Corporate Host', 'Stand-up Comedian', 'Mimicry Artist', 'Motivational Speaker'],
+  'Dance': ['Dance Crew', 'Choreographer', 'Bollywood Dance', 'Folk Dance', 'LED Dance Show', 'Classical Dance'],
+  'Special Acts': ['Magician', 'Fire Show', 'LED Show', 'Illusionist', 'Kids Entertainment']
+};
 
 export const AdminSettings: React.FC = () => {
   const { user } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
   const [company, setCompany] = useState<any>(null);
   const [galleryList, setGalleryList] = useState<string[]>([]);
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   
   const [formData, setFormData] = useState({
     companyName: '',
@@ -36,7 +47,7 @@ export const AdminSettings: React.FC = () => {
     website: '',
     bio: '',
     payoutUpi: '',
-    category: 'DJ',
+    category: 'Solo Artist',
     genres: '',
     galleryImages: '',
     videoUrl: '',
@@ -44,6 +55,9 @@ export const AdminSettings: React.FC = () => {
     instagram: '',
     youtubeLink: '',
     spotify: '',
+    managerName: '',
+    managerPhone: '',
+    managerEmail: '',
   });
 
   useEffect(() => {
@@ -57,6 +71,9 @@ export const AdminSettings: React.FC = () => {
           setCompany(comp);
           const imgs = Array.isArray(comp.gallery_images) ? comp.gallery_images : [];
           setGalleryList(imgs);
+          const compGenres = Array.isArray(comp.genres) ? comp.genres : [];
+          setSelectedGenres(compGenres);
+          
           setFormData({
             companyName: comp.name || '',
             email: comp.contact_email || user.email || '',
@@ -64,14 +81,17 @@ export const AdminSettings: React.FC = () => {
             website: comp.website || '',
             bio: comp.description || '',
             payoutUpi: comp.payout_upi || '',
-            category: comp.category || 'DJ',
-            genres: Array.isArray(comp.genres) ? comp.genres.join(', ') : '',
+            category: comp.category || 'Solo Artist',
+            genres: '', // Keep text blank to allow adding additional ones
             galleryImages: '',
             videoUrl: comp.video_url || '',
             bookingPrice: comp.booking_price ? String(comp.booking_price) : '',
             instagram: comp.social_links?.instagram || '',
             youtubeLink: comp.social_links?.youtube || '',
             spotify: comp.social_links?.spotify || '',
+            managerName: comp.manager_name || '',
+            managerPhone: comp.manager_phone || '',
+            managerEmail: comp.manager_email || '',
           });
         }
       } catch (error) {
@@ -87,6 +107,8 @@ export const AdminSettings: React.FC = () => {
     setIsLoading(true);
     
     const targetId = company?.id || `comp_${Math.random().toString(36).substring(2, 11)}`;
+    const customList = formData.genres.split(',').map(s => s.trim()).filter(Boolean);
+    const finalGenres = Array.from(new Set([...selectedGenres, ...customList]));
     
     try {
       const response = await fetch(`${API_BASE_URL}/api/companies/${targetId}`, {
@@ -100,7 +122,7 @@ export const AdminSettings: React.FC = () => {
           payout_upi: formData.payoutUpi,
           contact_email: formData.email,
           category: formData.category,
-          genres: formData.genres.split(',').map(s => s.trim()).filter(Boolean),
+          genres: finalGenres,
           gallery_images: galleryList,
           video_url: formData.videoUrl,
           booking_price: parseFloat(formData.bookingPrice) || 0,
@@ -108,12 +130,16 @@ export const AdminSettings: React.FC = () => {
             instagram: formData.instagram,
             youtube: formData.youtubeLink,
             spotify: formData.spotify
-          }
+          },
+          manager_name: formData.managerName,
+          manager_phone: formData.managerPhone,
+          manager_email: formData.managerEmail
         })
       });
 
       if (response.ok) {
-        alert('Portfolio settings updated successfully! Verification status depends on Superadmin review.');
+        const result = await response.json();
+        alert(result.message || 'Portfolio settings updated successfully!');
       } else {
         throw new Error('Failed to update settings');
       }
@@ -163,17 +189,21 @@ export const AdminSettings: React.FC = () => {
                 <label className="text-xs font-bold text-[var(--text-muted)] uppercase">Artist Category</label>
                 <select 
                   value={formData.category}
-                  onChange={(e) => setFormData({...formData, category: e.target.value})}
+                  onChange={(e) => {
+                    const cat = e.target.value;
+                    setFormData({...formData, category: cat});
+                    setSelectedGenres([]);
+                  }}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-[var(--violet-bright)] outline-none transition-all text-white [&>option]:bg-[#121214] [&>option]:text-white"
                 >
-                  {CATEGORY_OPTIONS.map(opt => (
+                  {Object.keys(CATEGORY_MAP).map(opt => (
                     <option key={opt} value={opt}>{opt}</option>
                   ))}
                 </select>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-[var(--text-muted)] uppercase">Genres (Comma separated)</label>
+              <div className="space-y-2 md:col-span-2">
+                <label className="text-xs font-bold text-[var(--text-muted)] uppercase">Additional Custom Genres (Comma separated)</label>
                 <input 
                   type="text" 
                   value={formData.genres}
@@ -183,7 +213,7 @@ export const AdminSettings: React.FC = () => {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 md:col-span-2">
                 <label className="text-xs font-bold text-[var(--text-muted)] uppercase">Starting Booking Price (₹ INR)</label>
                 <input 
                   type="number" 
@@ -192,6 +222,49 @@ export const AdminSettings: React.FC = () => {
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-[var(--violet-bright)] focus:bg-white/10 outline-none transition-all"
                   placeholder="e.g. 25000"
                 />
+              </div>
+            </div>
+
+            {/* Dynamic Subcategory Checklist */}
+            <div className="space-y-3 bg-white/5 p-6 rounded-2xl border border-white/5">
+              <label className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider block">
+                Select Sub-Options / Specializations for {formData.category}
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {(CATEGORY_MAP[formData.category] || []).map((subOpt) => {
+                  const isChecked = selectedGenres.includes(subOpt);
+                  return (
+                    <button
+                      key={subOpt}
+                      type="button"
+                      onClick={() => {
+                        if (isChecked) {
+                          setSelectedGenres(prev => prev.filter(g => g !== subOpt));
+                        } else {
+                          setSelectedGenres(prev => [...prev, subOpt]);
+                        }
+                      }}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl border text-sm font-semibold transition-all text-left ${
+                        isChecked
+                          ? 'bg-[var(--violet-primary)]/20 border-[var(--violet-bright)] text-white shadow-glow'
+                          : 'bg-white/5 border-white/10 text-[var(--text-secondary)] hover:border-white/20 hover:text-white'
+                      }`}
+                    >
+                      <div className={`w-4.5 h-4.5 rounded flex items-center justify-center border transition-all ${
+                        isChecked 
+                          ? 'border-[var(--violet-bright)] bg-[var(--violet-bright)] text-white' 
+                          : 'border-white/30 bg-transparent'
+                      }`}>
+                        {isChecked && (
+                          <svg className="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                          </svg>
+                        )}
+                      </div>
+                      <span>{subOpt}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -205,6 +278,49 @@ export const AdminSettings: React.FC = () => {
                 placeholder="Briefly describe your career, performance style, and key references..."
                 required
               />
+            </div>
+          </GlassCard>
+
+          {/* Manager Details */}
+          <GlassCard className="p-8 space-y-6">
+            <div className="flex items-center gap-3 pb-4 border-b border-white/5">
+              <Users className="w-5 h-5 text-[var(--violet-bright)]" />
+              <h3 className="text-xl font-bold font-display">Manager Details</h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-[var(--text-muted)] uppercase">Manager Name</label>
+                <input 
+                  type="text" 
+                  value={formData.managerName}
+                  onChange={(e) => setFormData({...formData, managerName: e.target.value})}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-[var(--violet-bright)] focus:bg-white/10 outline-none transition-all"
+                  placeholder="e.g. John Doe"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-[var(--text-muted)] uppercase">Manager Phone</label>
+                <input 
+                  type="tel" 
+                  value={formData.managerPhone}
+                  onChange={(e) => setFormData({...formData, managerPhone: e.target.value})}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-[var(--violet-bright)] focus:bg-white/10 outline-none transition-all"
+                  placeholder="e.g. +91 98765 43210"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-[var(--text-muted)] uppercase">Manager Email</label>
+                <input 
+                  type="email" 
+                  value={formData.managerEmail}
+                  onChange={(e) => setFormData({...formData, managerEmail: e.target.value})}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:border-[var(--violet-bright)] focus:bg-white/10 outline-none transition-all"
+                  placeholder="e.g. manager@example.com"
+                />
+              </div>
             </div>
           </GlassCard>
 

@@ -60,7 +60,7 @@ function App() {
       {/* Navbar for mobile and top-level desktop - HIDE for admin */}
       {!isAdminPath && !isSuperAdminPath && <Navbar />}
 
-      <main className={`flex-1 relative ${isAdminPath || isSuperAdminPath ? 'w-full' : ''}`}>
+      <main className={`flex-1 min-w-0 relative ${isAdminPath || isSuperAdminPath ? 'w-full' : ''}`}>
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             {/* User Routes */}
