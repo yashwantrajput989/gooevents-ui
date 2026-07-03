@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { PageWrapper } from '../../components/layout/PageWrapper';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { GlowButton } from '../../components/ui/GlowButton';
@@ -8,8 +8,8 @@ import { useUIStore } from '../../store/uiStore';
 import { API_BASE_URL, getImageUrl } from '../../config';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Heart, Calendar, Users, Coffee, Music, Paintbrush, Mic, CheckCircle, 
-  ArrowRight, ChevronRight, X, Phone, DollarSign, Award, Star, List, Sparkles 
+  Heart, Users, Coffee, Music, Paintbrush, Mic, CheckCircle, 
+  ChevronRight, X, Award, Star, List, Sparkles 
 } from 'lucide-react';
 
 export const WeddingPlanner: React.FC = () => {

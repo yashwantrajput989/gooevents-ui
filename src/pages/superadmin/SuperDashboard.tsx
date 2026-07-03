@@ -3,7 +3,7 @@ import { PageWrapper } from '../../components/layout/PageWrapper';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { 
   Users, Sparkles, Calendar, IndianRupee, CheckCircle, XCircle, 
-  RefreshCw, Eye, Plus, Edit2, Trash2, Heart, Award, Star, List, Mail, Phone 
+  RefreshCw, Eye, Plus, Edit2, Trash2, Mail, Phone 
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
 import { motion, AnimatePresence } from 'framer-motion';

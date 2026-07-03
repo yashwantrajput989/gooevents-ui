@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Home, User, Bell, LogIn, LogOut, Sparkles, Calendar, Zap, Heart } from 'lucide-react';
+import { Home, User, Bell, LogIn, LogOut, Sparkles, Calendar, Heart } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUIStore } from '../../store/uiStore';
