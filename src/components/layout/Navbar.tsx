@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Home, User, Bell, LogIn, LogOut, Sparkles, Calendar, Zap } from 'lucide-react';
+import { Home, User, Bell, LogIn, LogOut, Sparkles, Calendar, Zap, Heart } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUIStore } from '../../store/uiStore';
@@ -19,7 +19,7 @@ export const Navbar: React.FC = () => {
     { label: 'Home', path: '/dashboard', icon: Home },
     { label: 'Events', path: '/events', icon: Calendar },
     { label: 'Artists', path: '/artists', icon: Sparkles },
-    { label: 'Organize', path: '/organize', icon: Zap },
+    { label: 'Plan Wedding', path: '/wedding', icon: Heart },
     { label: 'Profile', path: '/profile', icon: User },
   ];
 

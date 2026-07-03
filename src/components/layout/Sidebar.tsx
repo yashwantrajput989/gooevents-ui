@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Users, User, Zap, Settings, LayoutDashboard, Sparkles, Calendar } from 'lucide-react';
+import { Home, Users, User, Zap, Settings, LayoutDashboard, Sparkles, Calendar, Heart } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { motion } from 'framer-motion';
 
@@ -13,7 +13,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isAdmin = false }) => {
     { label: 'Home', path: '/dashboard', icon: Home },
     { label: 'Events', path: '/events', icon: Calendar },
     { label: 'Artists', path: '/artists', icon: Sparkles },
-    { label: 'Organize', path: '/organize', icon: Zap },
+    { label: 'Plan Wedding', path: '/wedding', icon: Heart },
     { label: 'Profile', path: '/profile', icon: User },
   ];
 

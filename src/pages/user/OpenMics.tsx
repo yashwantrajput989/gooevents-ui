@@ -132,7 +132,7 @@ export const OpenMics: React.FC = () => {
                 <p className="text-sm font-bold text-white">No Open Mic Events Listed</p>
                 <p className="text-xs text-[var(--text-muted)] mt-1">Be the first to create one! Click "Become an Organizer" to list your open mic.</p>
               </div>
-              <GlowButton onClick={() => navigate('/organize')} className="mx-auto text-xs py-2 px-6">
+              <GlowButton onClick={() => navigate('/dashboard?organize=true')} className="mx-auto text-xs py-2 px-6">
                 Host Open Mic
               </GlowButton>
             </div>

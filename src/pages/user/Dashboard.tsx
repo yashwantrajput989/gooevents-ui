@@ -19,19 +19,31 @@ import {
   Zap,
   ArrowRight
 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { API_BASE_URL, getImageUrl } from '../../config';
+import { OrganizeEventModal } from '../../components/modals/OrganizeEventModal';
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuthStore();
   const { openModal } = useUIStore();
   const { city: activeCity } = useLocationStore();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [popularEvents, setPopularEvents] = useState<any[]>([]);
   const [popularArtists, setPopularArtists] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isOrganizeModalOpen, setIsOrganizeModalOpen] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('organize') === 'true') {
+      setIsOrganizeModalOpen(true);
+      // Remove query param
+      navigate('/dashboard', { replace: true });
+    }
+  }, [location, navigate]);
 
   useEffect(() => {
     const fetchHomeData = async () => {
@@ -318,13 +330,14 @@ export const Dashboard: React.FC = () => {
                 Organize open mics, college fests, rooftops, or band performances. Get free ticketing tools, dashboard stats, and venue recommendations instantly.
               </p>
             </div>
-            <GlowButton onClick={() => navigate('/organize')} className="relative z-10 w-fit shrink-0 py-3.5 px-8 font-bold text-xs uppercase tracking-wider">
+            <GlowButton onClick={() => setIsOrganizeModalOpen(true)} className="relative z-10 w-fit shrink-0 py-3.5 px-8 font-bold text-xs uppercase tracking-wider">
               Become an Organizer
             </GlowButton>
           </GlassCard>
         </section>
 
       </div>
+      <OrganizeEventModal isOpen={isOrganizeModalOpen} onClose={() => setIsOrganizeModalOpen(false)} />
     </PageWrapper>
   );
 };

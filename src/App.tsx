@@ -17,7 +17,7 @@ import { EventDetails } from './pages/user/EventDetails';
 import { Dashboard } from './pages/user/Dashboard';
 import { Artists } from './pages/user/Artists';
 import { ArtistDetails } from './pages/user/ArtistDetails';
-import { Organize } from './pages/user/Organize';
+import { WeddingPlanner } from './pages/user/WeddingPlanner';
 import { ArtistOnboarding } from './pages/user/ArtistOnboarding';
 import { OpenMics } from './pages/user/OpenMics';
 
@@ -69,7 +69,7 @@ function App() {
             <Route path="/events" element={<Events />} />
             <Route path="/events/:id" element={<EventDetails />} />
             <Route path="/activity" element={<Activity />} />
-            <Route path="/organize" element={<Organize />} />
+            <Route path="/wedding" element={<WeddingPlanner />} />
             <Route path="/artist-onboarding" element={<ArtistOnboarding />} />
             <Route path="/openmics" element={<OpenMics />} />
             <Route path="/profile" element={<Profile />} />
