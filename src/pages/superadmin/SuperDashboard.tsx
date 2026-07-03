@@ -39,6 +39,7 @@ export const SuperDashboard: React.FC = () => {
   const [newArtistEmail, setNewArtistEmail] = useState('');
   const [newArtistPassword, setNewArtistPassword] = useState('');
   const [isCreatingArtist, setIsCreatingArtist] = useState(false);
+  const [newAdminType, setNewAdminType] = useState<'artist' | 'venue' | 'caterer'>('artist');
 
   // Wedding Inventory Database States
   const [weddingVenues, setWeddingVenues] = useState<any[]>([]);
@@ -167,7 +168,7 @@ export const SuperDashboard: React.FC = () => {
     fetchWeddingData();
   };
 
-  // Create Artist Account Submit
+  // Create Admin Account Submit
   const handleCreateArtist = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsCreatingArtist(true);
@@ -178,18 +179,20 @@ export const SuperDashboard: React.FC = () => {
         body: JSON.stringify({
           name: newArtistName,
           email: newArtistEmail,
-          password: newArtistPassword
+          password: newArtistPassword,
+          adminType: newAdminType
         })
       });
       if (response.ok) {
-        alert('Artist admin account created successfully!');
+        alert(`${newAdminType.toUpperCase()} admin account created successfully!`);
         setNewArtistName('');
         setNewArtistEmail('');
         setNewArtistPassword('');
+        setNewAdminType('artist');
         fetchPlatformStats();
       } else {
         const data = await response.json();
-        alert(data.error || 'Failed to create artist.');
+        alert(data.error || 'Failed to create admin.');
       }
     } catch (err) {
       console.error(err);
@@ -473,19 +476,19 @@ export const SuperDashboard: React.FC = () => {
                 ))}
               </div>
 
-              {/* Create Artist Form */}
+              {/* Create Admin Form */}
               <GlassCard className="p-8 border-white/5">
                 <div className="flex items-center gap-3 mb-6">
                   <Sparkles className="w-5 h-5 text-[var(--violet-bright)]" />
-                  <h3 className="text-lg font-bold font-display text-white">Create Artist Admin Account</h3>
+                  <h3 className="text-lg font-bold font-display text-white">Create Portal Admin Account</h3>
                 </div>
-                <form onSubmit={handleCreateArtist} className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+                <form onSubmit={handleCreateArtist} className="grid grid-cols-1 md:grid-cols-5 gap-6 items-end">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Artist/Stage Name</label>
+                    <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Admin/Stage Name</label>
                     <input
                       type="text" required value={newArtistName}
                       onChange={(e) => setNewArtistName(e.target.value)}
-                      placeholder="e.g. DJ Shadow"
+                      placeholder="e.g. DJ Shadow or Grand Ballroom"
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-[var(--violet-bright)] text-xs text-white"
                     />
                   </div>
@@ -494,7 +497,7 @@ export const SuperDashboard: React.FC = () => {
                     <input
                       type="email" required value={newArtistEmail}
                       onChange={(e) => setNewArtistEmail(e.target.value)}
-                      placeholder="artist@gooevents.in"
+                      placeholder="admin@gooevents.in"
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-[var(--violet-bright)] text-xs text-white"
                     />
                   </div>
@@ -507,9 +510,21 @@ export const SuperDashboard: React.FC = () => {
                       className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-[var(--violet-bright)] text-xs text-white"
                     />
                   </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Admin Role Type</label>
+                    <select
+                      value={newAdminType}
+                      onChange={(e) => setNewAdminType(e.target.value as any)}
+                      className="w-full bg-[#121214] border border-white/10 rounded-xl px-4 py-2.5 outline-none focus:border-[var(--violet-bright)] text-xs text-white"
+                    >
+                      <option value="artist">Artist / Band Admin</option>
+                      <option value="venue">Venue Owner Admin</option>
+                      <option value="caterer">Catering Partner Admin</option>
+                    </select>
+                  </div>
                   <div>
                     <GlowButton type="submit" isLoading={isCreatingArtist} className="w-full py-3 text-xs uppercase tracking-wider font-bold">
-                      Create Artist Profile
+                      Create Admin Profile
                     </GlowButton>
                   </div>
                 </form>
