@@ -46,7 +46,7 @@ export const Dashboard: React.FC = () => {
         }
 
         // Fetch artists list
-        const artistRes = await fetch(`${API_BASE_URL}/api/artists`);
+        const artistRes = await fetch(`${API_BASE_URL}/artists`);
         if (artistRes.ok) {
           const artistData = await artistRes.json();
           setPopularArtists(Array.isArray(artistData) ? artistData.slice(0, 4) : []);

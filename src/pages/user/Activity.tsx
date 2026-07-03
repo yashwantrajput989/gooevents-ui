@@ -64,7 +64,7 @@ export const Activity: React.FC = () => {
       setIsLoading(true);
       try {
         // Fetch all verified artists
-        const artistRes = await fetch(`${API_BASE_URL}/api/artists`);
+        const artistRes = await fetch(`${API_BASE_URL}/artists`);
         if (artistRes.ok) {
           const artistData = await artistRes.json();
           setArtists(Array.isArray(artistData) ? artistData : []);

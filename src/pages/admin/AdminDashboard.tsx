@@ -37,7 +37,7 @@ export const AdminDashboard: React.FC = () => {
 
   const fetchCalendarData = async (companyId: string) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/companies/${companyId}/calendar`);
+      const response = await fetch(`${API_BASE_URL}/companies/${companyId}/calendar`);
       if (response.ok) {
         const data = await response.json();
         setAvailableDates(data.available_dates || []);
@@ -55,7 +55,7 @@ export const AdminDashboard: React.FC = () => {
     }
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/admin/dashboard/${user.id}`);
+      const response = await fetch(`${API_BASE_URL}/admin/dashboard/${user.id}`);
       if (response.ok) {
         const data = await response.json();
         setCompany(data.company || null);
@@ -93,7 +93,7 @@ export const AdminDashboard: React.FC = () => {
   const handleDeleteEvent = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this event?')) {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/events/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/events/${id}`, {
           method: 'DELETE'
         });
         if (response.ok) {
@@ -115,7 +115,7 @@ export const AdminDashboard: React.FC = () => {
     setOtpError('');
     setOtpSuccess('');
     try {
-      const res = await fetch(`${API_BASE_URL}/api/auth/send-otp`, {
+      const res = await fetch(`${API_BASE_URL}/auth/send-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: user.email })
@@ -137,7 +137,7 @@ export const AdminDashboard: React.FC = () => {
     setOtpError('');
     setOtpSuccess('');
     try {
-      const res = await fetch(`${API_BASE_URL}/api/auth/verify-otp`, {
+      const res = await fetch(`${API_BASE_URL}/auth/verify-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: user.email, code: otpCode })
@@ -208,7 +208,7 @@ export const AdminDashboard: React.FC = () => {
     setAvailableDates(updated);
     
     try {
-      const res = await fetch(`${API_BASE_URL}/api/companies/${company.id}/calendar`, {
+      const res = await fetch(`${API_BASE_URL}/companies/${company.id}/calendar`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ available_dates: updated })

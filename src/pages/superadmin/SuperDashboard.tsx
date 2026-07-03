@@ -37,7 +37,7 @@ export const SuperDashboard: React.FC = () => {
     setIsLoading(true);
     try {
       // Fetch platform global stats
-      const response = await fetch(`${API_BASE_URL}/api/admin/global-stats`);
+      const response = await fetch(`${API_BASE_URL}/admin/global-stats`);
       if (response.ok) {
         const data = await response.json();
         const allComps = data.companies || [];
@@ -106,7 +106,7 @@ export const SuperDashboard: React.FC = () => {
       }
 
       // Fetch pending verifications & edits
-      const approvalsResponse = await fetch(`${API_BASE_URL}/api/superadmin/pending-approvals`);
+      const approvalsResponse = await fetch(`${API_BASE_URL}/superadmin/pending-approvals`);
       if (approvalsResponse.ok) {
         const approvalsData = await approvalsResponse.json();
         setPendingCompanies(approvalsData);
@@ -126,7 +126,7 @@ export const SuperDashboard: React.FC = () => {
 
   const handleApprove = async (id: string) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/superadmin/approve-changes/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/superadmin/approve-changes/${id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
@@ -146,7 +146,7 @@ export const SuperDashboard: React.FC = () => {
   const handleReject = async (id: string) => {
     if (window.confirm('Reject and discard these changes?')) {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/superadmin/reject-changes/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/superadmin/reject-changes/${id}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
         });
@@ -168,7 +168,7 @@ export const SuperDashboard: React.FC = () => {
     e.preventDefault();
     setIsCreatingArtist(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/superadmin/create-artist`, {
+      const response = await fetch(`${API_BASE_URL}/superadmin/create-artist`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

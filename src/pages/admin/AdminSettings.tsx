@@ -64,7 +64,7 @@ export const AdminSettings: React.FC = () => {
     const fetchSettings = async () => {
       if (!user) return;
       try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/dashboard/${user.id}`);
+        const response = await fetch(`${API_BASE_URL}/admin/dashboard/${user.id}`);
         if (response.ok) {
           const data = await response.json();
           const comp = data.company;
@@ -111,7 +111,7 @@ export const AdminSettings: React.FC = () => {
     const finalGenres = Array.from(new Set([...selectedGenres, ...customList]));
     
     try {
-      const response = await fetch(`${API_BASE_URL}/api/companies/${targetId}`, {
+      const response = await fetch(`${API_BASE_URL}/companies/${targetId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
