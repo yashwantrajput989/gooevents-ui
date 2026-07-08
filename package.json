@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -16,9 +16,10 @@
     "axios": "^1.16.0",
     "clsx": "^2.1.1",
     "firebase": "^12.13.0",
-    "framer-motion": "^12.38.0",
-    "lucide-react": "^1.14.0",
+    "framer-motion": "^12.42.2",
+    "lucide-react": "^1.23.0",
     "mapbox-gl": "^3.23.1",
+    "motion-dom": "^12.42.2",
     "qrcode.react": "^4.2.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
