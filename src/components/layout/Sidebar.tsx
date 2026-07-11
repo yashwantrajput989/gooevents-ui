@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { Home, Users, User, Zap, Settings, LayoutDashboard, Sparkles, Calendar, Heart } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { motion } from 'framer-motion';
-import logoImg from '../../assets/logo.jpg';
+import logoImg from '../../assets/logo.png';
 
 interface SidebarProps {
   isAdmin?: boolean;
