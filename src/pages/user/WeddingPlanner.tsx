@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PageWrapper } from '../../components/layout/PageWrapper';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { GlowButton } from '../../components/ui/GlowButton';
@@ -15,6 +16,7 @@ import {
 export const WeddingPlanner: React.FC = () => {
   const { user } = useAuthStore();
   const { openModal } = useUIStore();
+  const navigate = useNavigate();
 
   // Navigation / Funnel State
   const [funnelTier, setFunnelTier] = useState<'Silver' | 'Gold' | 'Platinum' | null>(null);
@@ -344,7 +346,7 @@ export const WeddingPlanner: React.FC = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 
                 {/* Standalone Venues */}
-                <GlassCard onClick={() => openAlaCarte('venues')} className="p-5 text-center space-y-3 cursor-pointer hover:bg-white/5 border-white/5 hover:border-cyan-500/30 transition-all group">
+                <GlassCard onClick={() => navigate('/wedding/venues')} className="p-5 text-center space-y-3 cursor-pointer hover:bg-white/5 border-white/5 hover:border-cyan-500/30 transition-all group">
                   <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mx-auto text-cyan-400 group-hover:scale-110 transition-transform">
                     <Users className="w-6 h-6" />
                   </div>
@@ -353,7 +355,7 @@ export const WeddingPlanner: React.FC = () => {
                 </GlassCard>
 
                 {/* Standalone Catering */}
-                <GlassCard onClick={() => openAlaCarte('catering')} className="p-5 text-center space-y-3 cursor-pointer hover:bg-white/5 border-white/5 hover:border-violet-500/30 transition-all group">
+                <GlassCard onClick={() => navigate('/wedding/catering')} className="p-5 text-center space-y-3 cursor-pointer hover:bg-white/5 border-white/5 hover:border-violet-500/30 transition-all group">
                   <div className="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center mx-auto text-[var(--violet-bright)] group-hover:scale-110 transition-transform">
                     <Coffee className="w-6 h-6" />
                   </div>
@@ -362,7 +364,7 @@ export const WeddingPlanner: React.FC = () => {
                 </GlassCard>
 
                 {/* Standalone Decor */}
-                <GlassCard onClick={() => openAlaCarte('decors')} className="p-5 text-center space-y-3 cursor-pointer hover:bg-white/5 border-white/5 hover:border-pink-500/30 transition-all group">
+                <GlassCard onClick={() => navigate('/wedding/decors')} className="p-5 text-center space-y-3 cursor-pointer hover:bg-white/5 border-white/5 hover:border-pink-500/30 transition-all group">
                   <div className="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center mx-auto text-pink-400 group-hover:scale-110 transition-transform">
                     <Paintbrush className="w-6 h-6" />
                   </div>
@@ -371,7 +373,7 @@ export const WeddingPlanner: React.FC = () => {
                 </GlassCard>
 
                 {/* Standalone Artists */}
-                <GlassCard onClick={() => openAlaCarte('artists')} className="p-5 text-center space-y-3 cursor-pointer hover:bg-white/5 border-white/5 hover:border-amber-500/30 transition-all group">
+                <GlassCard onClick={() => navigate('/wedding/artists')} className="p-5 text-center space-y-3 cursor-pointer hover:bg-white/5 border-white/5 hover:border-amber-500/30 transition-all group">
                   <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center mx-auto text-amber-400 group-hover:scale-110 transition-transform">
                     <Music className="w-6 h-6" />
                   </div>

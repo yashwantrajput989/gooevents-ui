@@ -224,7 +224,7 @@ export const Events: React.FC = () => {
         {isComingSoon ? (
           <ComingSoon
             title={`Coming Soon to ${activeCity}`}
-            description={`We're expanding! Goo Events will be live in ${activeCity} very soon.`}
+            description={`We're expanding! Evento will be live in ${activeCity} very soon.`}
           />
         ) : isLoading ? (
           /* Loading skeleton */

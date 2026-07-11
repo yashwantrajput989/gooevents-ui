@@ -82,7 +82,7 @@ export const Profile: React.FC = () => {
             <p className="text-[var(--text-secondary)] text-sm md:text-base max-w-md mx-auto md:mx-0">
               {user.interests && user.interests.length > 0 
                 ? `Interests: ${user.interests.join(', ').replace(/_/g, ' ')}`
-                : `Entertainment seeker | Show explorer | Goo Events traveler | ${user.city || 'Global'}`}
+                : `Entertainment seeker | Show explorer | Evento traveler | ${user.city || 'Global'}`}
             </p>
             {user.interests && (
               <div className="flex flex-wrap gap-2 justify-center md:justify-start mt-4">

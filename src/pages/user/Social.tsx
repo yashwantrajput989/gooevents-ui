@@ -12,7 +12,7 @@ export const Social: React.FC = () => {
 
       <ComingSoon 
         title="Social Feed"
-        description="A space to share your experiences, follow friends, and discover what's happening in the Goo Events universe."
+        description="A space to share your experiences, follow friends, and discover what's happening in the Evento universe."
         icon={<Users className="w-10 h-10 text-[var(--violet-bright)]" />}
       />
     </PageWrapper>

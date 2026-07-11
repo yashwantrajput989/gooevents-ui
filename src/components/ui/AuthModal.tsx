@@ -175,7 +175,7 @@ export const AuthModal: React.FC = () => {
               >
                 <div className="text-center space-y-2 mb-8">
                   <h2 className="text-3xl font-display font-bold text-gradient">
-                    {mode === 'login' ? 'Welcome Back' : 'Join Goo Events'}
+                    {mode === 'login' ? 'Welcome Back' : 'Join Evento'}
                   </h2>
                   <p className="text-[var(--text-secondary)] text-sm">
                     {mode === 'login' ? 'Your next adventure starts here.' : 'Create an account to explore more.'}
@@ -292,8 +292,8 @@ export const AuthModal: React.FC = () => {
 
                 <div className="space-y-4 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
                   {[
-                    { title: 'Privacy & Protection', desc: "I agree to Goo Events's privacy policies and terms." },
-                    { title: 'Independent Entity', desc: "I understand Goo Events is NOT a part of any club, pub, or show venue." },
+                    { title: 'Privacy & Protection', desc: "I agree to Evento's privacy policies and terms." },
+                    { title: 'Independent Entity', desc: "I understand Evento is NOT a part of any club, pub, or show venue." },
                     { title: 'Age Consent', desc: "I confirm that I am 18 years of age or older." }
                   ].map((item, idx) => (
                     <div key={idx} className="flex gap-3">

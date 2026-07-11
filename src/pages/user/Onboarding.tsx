@@ -109,14 +109,14 @@ export const Onboarding: React.FC = () => {
                     <CheckCircle2 className="w-5 h-5 text-[var(--violet-bright)] flex-shrink-0 mt-1" />
                     <div>
                       <p className="font-bold text-white">Privacy & Protection</p>
-                      <p className="text-sm text-[var(--text-muted)]">I agree to Goo Events's privacy policies and terms of service.</p>
+                      <p className="text-sm text-[var(--text-muted)]">I agree to Evento's privacy policies and terms of service.</p>
                     </div>
                   </div>
                   <div className="flex gap-4">
                     <CheckCircle2 className="w-5 h-5 text-[var(--violet-bright)] flex-shrink-0 mt-1" />
                     <div>
                       <p className="font-bold text-white">Independent Entity</p>
-                      <p className="text-sm text-[var(--text-muted)]">I understand that Goo Events is a ticketing platform and is NOT a part of any club, pub, or show venue.</p>
+                      <p className="text-sm text-[var(--text-muted)]">I understand that Evento is a ticketing platform and is NOT a part of any club, pub, or show venue.</p>
                     </div>
                   </div>
                   <div className="flex gap-4">

@@ -66,7 +66,7 @@ export const AdminLogin: React.FC<{ forcedRole?: 'admin' | 'superadmin' }> = ({ 
               {mode === 'login' ? 'Admin Gateway' : 'Partner Application'}
             </h1>
             <p className="text-xl text-[var(--text-secondary)] mt-4">
-              {mode === 'login' ? 'Manage the future of premium events.' : 'Join Goo Events as a premium partner.'}
+              {mode === 'login' ? 'Manage the future of premium events.' : 'Join Evento as a premium partner.'}
             </p>
           </div>
 
@@ -165,7 +165,7 @@ export const AdminLogin: React.FC<{ forcedRole?: 'admin' | 'superadmin' }> = ({ 
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 focus:border-[var(--violet-bright)] outline-none transition-all"
-                        placeholder="admin@gooevents.com"
+                        placeholder="admin@evento.com"
                       />
                     </div>
                   </div>
@@ -196,7 +196,7 @@ export const AdminLogin: React.FC<{ forcedRole?: 'admin' | 'superadmin' }> = ({ 
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 focus:border-[var(--violet-bright)] outline-none transition-all"
-                      placeholder="admin@gooevents.com"
+                      placeholder="admin@evento.com"
                     />
                   </div>
                 </div>

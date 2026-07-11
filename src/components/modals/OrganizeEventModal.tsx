@@ -219,7 +219,7 @@ export const OrganizeEventModal: React.FC<OrganizeEventModalProps> = ({ isOpen, 
         <header className="flex flex-col gap-4 border-b border-white/5 pb-4 pr-8">
           <div className="space-y-1">
             <h1 className="text-xl md:text-3xl font-display font-extrabold text-white">Organize Event or List Venue</h1>
-            <p className="text-xs text-[var(--text-secondary)]">Partner with Goo Events to host incredible music, open mics, or band performances.</p>
+            <p className="text-xs text-[var(--text-secondary)]">Partner with Evento to host incredible music, open mics, or band performances.</p>
           </div>
           
           <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 w-full md:w-fit mt-1">
@@ -250,7 +250,7 @@ export const OrganizeEventModal: React.FC<OrganizeEventModalProps> = ({ isOpen, 
               
               {!user ? (
                 <div className="p-8 text-center space-y-4 bg-white/5 rounded-2xl border border-white/5">
-                  <p className="text-sm text-[var(--text-secondary)]">Please sign in to organize events on Goo Events.</p>
+                  <p className="text-sm text-[var(--text-secondary)]">Please sign in to organize events on Evento.</p>
                   <GlowButton onClick={() => { onClose(); openModal('auth'); }} className="mx-auto">
                     Sign In to Continue
                   </GlowButton>
@@ -593,7 +593,7 @@ export const OrganizeEventModal: React.FC<OrganizeEventModalProps> = ({ isOpen, 
                 <ul className="space-y-2 text-[10px] text-[var(--text-secondary)]">
                   <li className="flex gap-2">
                     <span className="text-[var(--violet-bright)]">•</span>
-                    <span><strong>Free Ticketing</strong>: Goo Events provides free basic ticketing. Commisions only apply for premium concert pricing.</span>
+                    <span><strong>Free Ticketing</strong>: Evento provides free basic ticketing. Commisions only apply for premium concert pricing.</span>
                   </li>
                   <li className="flex gap-2">
                     <span className="text-[var(--violet-bright)]">•</span>

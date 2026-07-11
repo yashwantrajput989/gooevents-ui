@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { Home, Users, User, Zap, Settings, LayoutDashboard, Sparkles, Calendar, Heart } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { motion } from 'framer-motion';
+import logoImg from '../../assets/logo.jpg';
 
 interface SidebarProps {
   isAdmin?: boolean;
@@ -28,11 +29,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isAdmin = false }) => {
 
   return (
     <aside className="hidden md:flex flex-col fixed top-0 left-0 bottom-0 w-64 glass-card rounded-none border-y-0 border-l-0 border-r border-[var(--border-subtle)] bg-[var(--bg-card)] z-50">
-      <div className="p-8">
-        <h1 className="font-display font-bold text-2xl tracking-wider text-transparent bg-clip-text bg-[image:var(--gradient-hero)] flex flex-col items-start gap-1">
-          <span className="text-3xl font-extrabold uppercase">Goo Events</span>
-          {isAdmin && <span className="text-[10px] bg-[var(--accent-pink)]/20 text-[var(--accent-pink)] px-2 py-0.5 rounded-md font-sans tracking-widest font-bold">ARTIST PORTAL</span>}
-        </h1>
+      <div className="p-6 flex flex-col items-start gap-3">
+        <img src={logoImg} alt="Evento Logo" className="w-36 rounded-xl border border-white/10" />
+        {isAdmin && <span className="text-[10px] bg-[var(--accent-pink)]/20 text-[var(--accent-pink)] px-2 py-0.5 rounded-md font-sans tracking-widest font-bold">ARTIST PORTAL</span>}
       </div>
 
       <div className="flex-1 px-4 py-6 flex flex-col gap-2">

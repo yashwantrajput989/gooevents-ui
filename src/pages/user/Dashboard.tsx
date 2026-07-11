@@ -325,7 +325,7 @@ export const Dashboard: React.FC = () => {
               <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--violet-bright)] flex items-center gap-1.5">
                 <Zap className="w-3.5 h-3.5 animate-bounce" /> Host Your Own Show
               </span>
-              <h3 className="text-2xl font-display font-black text-white leading-tight">Got a gig idea? Sell tickets on Goo Events</h3>
+              <h3 className="text-2xl font-display font-black text-white leading-tight">Got a gig idea? Sell tickets on Evento</h3>
               <p className="text-xs text-[var(--text-secondary)] font-medium max-w-lg">
                 Organize open mics, college fests, rooftops, or band performances. Get free ticketing tools, dashboard stats, and venue recommendations instantly.
               </p>

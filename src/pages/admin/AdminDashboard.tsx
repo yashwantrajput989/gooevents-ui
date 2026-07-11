@@ -1922,7 +1922,7 @@ export const AdminDashboard: React.FC = () => {
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-4xl font-display font-black text-white">{profile?.name || 'Goo Events Admin'}</h1>
+              <h1 className="text-4xl font-display font-black text-white">{profile?.name || 'Evento Admin'}</h1>
               <span className="bg-[#ff7a00] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
                 {adminType.toUpperCase()} PARTNER
               </span>

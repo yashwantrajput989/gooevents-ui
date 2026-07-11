@@ -312,7 +312,7 @@ export const Activity: React.FC = () => {
             <GlassCard className="p-5 md:p-6 space-y-4">
               <div className="flex items-center gap-2 border-b border-white/5 pb-3">
                 <Sparkles className="w-4 h-4 text-[var(--accent-gold)]" />
-                <h3 className="text-sm font-bold font-display">Goo Events Tips</h3>
+                <h3 className="text-sm font-bold font-display">Evento Tips</h3>
               </div>
               <ul className="space-y-3 text-[11px] text-[var(--text-secondary)] font-medium leading-relaxed">
                 <li className="flex gap-2">

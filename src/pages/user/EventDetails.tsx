@@ -214,7 +214,7 @@ export const EventDetails: React.FC = () => {
               </GlowButton>
               
               <p className="text-[10px] text-center text-[var(--text-muted)] mt-4">
-                By proceeding, you agree to Goo Events's Terms & Conditions and Privacy Policy.
+                By proceeding, you agree to Evento's Terms & Conditions and Privacy Policy.
               </p>
             </div>
           </GlassCard>

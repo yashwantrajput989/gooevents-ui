@@ -225,7 +225,7 @@ export const ArtistDetails: React.FC = () => {
                   {artist.category || 'Artist'}
                 </span>
                 <span className="bg-green-500/10 text-green-400 border border-green-500/20 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Verified Goo Partner
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Verified Evento Partner
                 </span>
                 <button
                   onClick={handleToggleSave}

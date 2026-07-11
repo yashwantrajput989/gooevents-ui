@@ -476,7 +476,7 @@ export const ArtistOnboarding: React.FC = () => {
                 </div>
 
                 <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200/80 leading-relaxed">
-                  <strong>Verification details:</strong> Once submitted, your profile will be sent to the Goo Events admin team. Verification takes up to 24 hours. While pending, you can log in to your dashboard to draft show details.
+                  <strong>Verification details:</strong> Once submitted, your profile will be sent to the Evento admin team. Verification takes up to 24 hours. While pending, you can log in to your dashboard to draft show details.
                 </div>
               </GlassCard>
 

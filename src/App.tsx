@@ -18,6 +18,10 @@ import { Dashboard } from './pages/user/Dashboard';
 import { Artists } from './pages/user/Artists';
 import { ArtistDetails } from './pages/user/ArtistDetails';
 import { WeddingPlanner } from './pages/user/WeddingPlanner';
+import { WeddingVenues } from './pages/user/WeddingVenues';
+import { WeddingCatering } from './pages/user/WeddingCatering';
+import { WeddingDecors } from './pages/user/WeddingDecors';
+import { WeddingArtists } from './pages/user/WeddingArtists';
 import { ArtistOnboarding } from './pages/user/ArtistOnboarding';
 import { OpenMics } from './pages/user/OpenMics';
 
@@ -70,6 +74,10 @@ function App() {
             <Route path="/events/:id" element={<EventDetails />} />
             <Route path="/activity" element={<Activity />} />
             <Route path="/wedding" element={<WeddingPlanner />} />
+            <Route path="/wedding/venues" element={<WeddingVenues />} />
+            <Route path="/wedding/catering" element={<WeddingCatering />} />
+            <Route path="/wedding/decors" element={<WeddingDecors />} />
+            <Route path="/wedding/artists" element={<WeddingArtists />} />
             <Route path="/artist-onboarding" element={<ArtistOnboarding />} />
             <Route path="/openmics" element={<OpenMics />} />
             <Route path="/profile" element={<Profile />} />

@@ -8,6 +8,7 @@ import { useTicketStore } from '../../store/ticketStore';
 import { Avatar } from '../ui/Avatar';
 import { useState } from 'react';
 import { GlassCard } from '../ui/GlassCard';
+import logoIcon from '../../assets/favicon.png';
 
 export const Navbar: React.FC = () => {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -29,8 +30,9 @@ export const Navbar: React.FC = () => {
       <header className="md:hidden fixed top-0 left-0 right-0 z-50 h-16 bg-[var(--bg-primary)]/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-4">
         {/* Left: Brand Logo & Title */}
         <NavLink to="/events" className="flex items-center gap-2">
+          <img src={logoIcon} alt="Evento Logo" className="h-6 w-6 rounded-md" />
           <span className="font-display font-black text-xl tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-[var(--violet-bright)] to-[var(--accent-pink)]">
-            Goo Events
+            Evento
           </span>
         </NavLink>
 

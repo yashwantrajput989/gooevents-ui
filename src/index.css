@@ -3,21 +3,21 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg-primary: #000000;
-  --color-bg-secondary: #080808;
-  --color-bg-card: #121214;
-  --color-bg-glass: rgba(255,255,255,0.03);
+  --color-bg-primary: #05010d;
+  --color-bg-secondary: #0d041a;
+  --color-bg-card: #140b27;
+  --color-bg-glass: rgba(255,255,255,0.02);
   
-  --color-border-subtle: rgba(249,115,22,0.3);
-  --color-border-glow: rgba(249,115,22,0.6);
+  --color-border-subtle: rgba(124,58,237,0.25);
+  --color-border-glow: rgba(167,139,250,0.5);
 
-  --color-violet-primary: #f97316;
-  --color-violet-bright: #fb923c;
-  --color-violet-glow: #facc15;
-  --color-violet-ultra: #ea580c;
+  --color-violet-primary: #7c3aed;
+  --color-violet-bright: #a78bfa;
+  --color-violet-glow: #c084fc;
+  --color-violet-ultra: #6d28d9;
 
-  --color-accent-pink: #ef4444;
-  --color-accent-cyan: #facc15;
+  --color-accent-pink: #ec4899;
+  --color-accent-cyan: #22d3ee;
   --color-accent-gold: #f59e0b;
   --color-accent-green: #10b981;
 
@@ -31,20 +31,20 @@
 }
 
 :root {
-  --bg-primary: #000000;
-  --bg-secondary: #080808;
-  --bg-card: #121214;
-  --bg-glass: rgba(255,255,255,0.03);
-  --border-subtle: rgba(249,115,22,0.3);
-  --border-glow: rgba(249,115,22,0.6);
+  --bg-primary: #05010d;
+  --bg-secondary: #0d041a;
+  --bg-card: #140b27;
+  --bg-glass: rgba(255,255,255,0.02);
+  --border-subtle: rgba(124,58,237,0.25);
+  --border-glow: rgba(167,139,250,0.5);
 
-  --violet-primary: #f97316;
-  --violet-bright: #fb923c;
-  --violet-glow: #facc15;
-  --violet-ultra: #ea580c;
+  --violet-primary: #7c3aed;
+  --violet-bright: #a78bfa;
+  --violet-glow: #c084fc;
+  --violet-ultra: #6d28d9;
 
-  --accent-pink: #ef4444;
-  --accent-cyan: #facc15;
+  --accent-pink: #ec4899;
+  --accent-cyan: #22d3ee;
   --accent-gold: #f59e0b;
   --accent-green: #10b981;
 
@@ -52,13 +52,13 @@
   --text-secondary: #a1a1aa;
   --text-muted: #71717a;
 
-  --gradient-hero: linear-gradient(135deg, #f97316 0%, #ef4444 50%, #facc15 100%);
-  --gradient-card: linear-gradient(145deg, rgba(249,115,22,0.1), rgba(250,204,21,0.05));
-  --gradient-violet: linear-gradient(135deg, #ea580c, #f97316, #fb923c);
+  --gradient-hero: linear-gradient(135deg, #7c3aed 0%, #ec4899 50%, #22d3ee 100%);
+  --gradient-card: linear-gradient(145deg, rgba(124,58,237,0.08), rgba(34, 211, 238, 0.04));
+  --gradient-violet: linear-gradient(135deg, #6d28d9, #7c3aed, #a78bfa);
 
-  --shadow-glow: 0 0 40px rgba(249,115,22,0.3);
-  --shadow-pink: 0 0 40px rgba(239,68,68,0.2);
-  --shadow-card: 0 8px 32px rgba(0,0,0,0.6);
+  --shadow-glow: 0 0 40px rgba(124,58,237,0.25);
+  --shadow-pink: 0 0 40px rgba(236,72,153,0.15);
+  --shadow-card: 0 8px 32px rgba(0,0,0,0.7);
 }
 
 html, body {
@@ -105,7 +105,7 @@ h1, h2, h3, h4, h5, h6 {
   
   .glass-card:hover {
     border-color: var(--border-glow);
-    box-shadow: 0 0 30px rgba(249,115,22,0.2);
+    box-shadow: 0 0 30px rgba(124,58,237,0.25);
   }
 
   .text-gradient {
