@@ -1,6 +1,6 @@
-# Walkthrough - Wedding Planner Pages & Evento Rebrand
+# Walkthrough - Wedding Planner Pages, Evento Rebrand & Android App
 
-This document details the changes implemented to convert the "Plan Your Wedding" modals into dedicated sub-pages and apply the new **Evento** branding, logo, and dark violet color theme.
+This document details the changes implemented to convert the "Plan Your Wedding" modals into dedicated sub-pages, apply the new **Evento** branding & dark violet theme, and build the native Android WebView wrapper app.
 
 ---
 
@@ -24,8 +24,8 @@ We updated [WeddingPlanner.tsx](file:///c:/Users/HP/Downloads/gooevents-ui/src/p
 ## 2. Evento Rebranding & Logo Integration
 
 - **Logo Copying**:
-  - Saved the uploaded master logo to [logo.jpg](file:///c:/Users/HP/Downloads/gooevents-ui/src/assets/logo.jpg).
-  - Used Gemini's Nano Banana model to crop the stylized letter **e** and saved it as a high-quality square icon [favicon.png](file:///c:/Users/HP/Downloads/gooevents-ui/src/assets/favicon.png) and copied it to the public assets directory.
+  - Saved the uploaded master logo to [logo.png](file:///c:/Users/HP/Downloads/gooevents-ui/src/assets/logo.png) (transparent background-removed version).
+  - Used Gemini's Nano Banana model to crop the stylized letter **e** from the original logo, keeping the purple/violet background gradient as a high-quality square icon [favicon.png](file:///c:/Users/HP/Downloads/gooevents-ui/src/assets/favicon.png) and copied it to the public assets directory.
 - **Icon / Title update**:
   - Updated [index.html](file:///c:/Users/HP/Downloads/gooevents-ui/index.html) to link `/favicon.png` as the favicon and updated the title tag to **Evento**.
 - **Branding display**:
@@ -45,16 +45,21 @@ We updated [WeddingPlanner.tsx](file:///c:/Users/HP/Downloads/gooevents-ui/src/p
 
 ---
 
+## 4. Android Application Wrapper
+
+We built a native Android WebView wrapper app:
+- **Build Base Path**: Modified [vite.config.ts](file:///c:/Users/HP/Downloads/gooevents-ui/vite.config.ts) to use `base: './'` so that all compiled assets load correctly from local relative resources.
+- **Server File Watching**: Excluded the `evento-android` folder inside Vite configuration watch configuration to prevent Locked File crashes.
+- **Project Creation**: Initiated a native Android project using `android create empty-activity` named `evento`.
+- **WebView Setup**: Overwrote `MainActivity.kt` with a Kotlin WebView client enabled with JavaScript, DOM storage, database, and file access features, loading `file:///android_asset/index.html` on startup.
+- **Local Assets Compilation**: Ran a production build of the React app and copied all output assets from `dist` to `evento-android/app/src/main/assets`.
+- **Permissions**: Added `INTERNET` and `usesCleartextTraffic` configurations to `AndroidManifest.xml` to support api fetches.
+- **Custom App Icons**: Overrode all standard and round launcher icons with the purple background `favicon.png` in mipmap resource folders, and cleaned up competing template `.webp` configurations.
+
+---
+
 ## Verification Results
 
-- Proactively ran `npm run build` which compiled successfully without any TypeScript or bundling warnings:
-```bash
-vite v6.4.2 building for production...
-✓ 2872 modules transformed.
-dist/index.html                       0.57 kB
-dist/assets/logo-BlbhukXG.jpg        41.94 kB
-dist/assets/favicon-B-hdnmBm.png    274.78 kB
-dist/assets/index-HsjJ4KSZ.css      106.70 kB
-dist/assets/index-BylUeHeu.js     1,706.04 kB
-✓ built in 16.06s
-```
+- **Web Build**: Successfully built the React application with relative paths.
+- **Android Compilation**: Ran `./gradlew assembleDebug` in the Android workspace. The compilation completed successfully and generated the debug package at the project root directory:
+  - **APK Location**: [evento-debug.apk](file:///c:/Users/HP/Downloads/gooevents-ui/evento-debug.apk) (approx 15.7 MB)

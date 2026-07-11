@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageWrapper } from '../../components/layout/PageWrapper';
 import { GlassCard } from '../../components/ui/GlassCard';
@@ -17,6 +17,18 @@ export const WeddingPlanner: React.FC = () => {
   const { user } = useAuthStore();
   const { openModal } = useUIStore();
   const navigate = useNavigate();
+
+  // Slider State for bundled packages on mobile
+  const [activePackageIndex, setActivePackageIndex] = useState(0);
+  const packagesContainerRef = useRef<HTMLDivElement>(null);
+
+  const handlePackagesScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const container = e.currentTarget;
+    const scrollPosition = container.scrollLeft;
+    const cardWidth = container.clientWidth * 0.85;
+    const index = Math.round(scrollPosition / cardWidth);
+    setActivePackageIndex(index);
+  };
 
   // Navigation / Funnel State
   const [funnelTier, setFunnelTier] = useState<'Silver' | 'Gold' | 'Platinum' | null>(null);
@@ -224,10 +236,14 @@ export const WeddingPlanner: React.FC = () => {
                 <h2 className="text-xl md:text-2xl font-display font-extrabold text-white">Bundled All-In-One Packages</h2>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div 
+                ref={packagesContainerRef}
+                onScroll={handlePackagesScroll}
+                className="flex md:grid overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none gap-6 scrollbar-none pb-4 -mx-4 px-4 md:mx-0 md:px-0 md:grid-cols-2 lg:grid-cols-4"
+              >
                 
                 {/* Silver Plan */}
-                <GlassCard className="p-6 flex flex-col justify-between border-slate-600/30 hover:border-slate-400/50 hover:shadow-[0_0_25px_rgba(203,213,225,0.15)] transition-all group relative overflow-hidden">
+                <GlassCard className="p-6 flex flex-col justify-between border-slate-600/30 hover:border-slate-400/50 hover:shadow-[0_0_25px_rgba(203,213,225,0.15)] transition-all group relative overflow-hidden snap-center shrink-0 w-[85%] md:w-auto md:shrink">
                   <div className="space-y-4">
                     <div className="flex justify-between items-start">
                       <span className="text-[10px] bg-slate-500/20 text-slate-300 font-bold px-2 py-0.5 rounded uppercase tracking-wider">Silver Package</span>
@@ -254,7 +270,7 @@ export const WeddingPlanner: React.FC = () => {
                 </GlassCard>
 
                 {/* Gold Plan */}
-                <GlassCard className="p-6 flex flex-col justify-between border-amber-600/30 hover:border-amber-500/50 hover:shadow-[0_0_25px_rgba(245,158,11,0.2)] transition-all group relative overflow-hidden bg-gradient-to-b from-amber-500/5 to-transparent">
+                <GlassCard className="p-6 flex flex-col justify-between border-amber-600/30 hover:border-amber-500/50 hover:shadow-[0_0_25px_rgba(245,158,11,0.2)] transition-all group relative overflow-hidden bg-gradient-to-b from-amber-500/5 to-transparent snap-center shrink-0 w-[85%] md:w-auto md:shrink">
                   <div className="space-y-4">
                     <div className="flex justify-between items-start">
                       <span className="text-[10px] bg-amber-500/20 text-amber-300 font-bold px-2 py-0.5 rounded uppercase tracking-wider">Gold Package</span>
@@ -281,7 +297,7 @@ export const WeddingPlanner: React.FC = () => {
                 </GlassCard>
 
                 {/* Platinum Plan */}
-                <GlassCard className="p-6 flex flex-col justify-between border-[var(--violet-primary)]/40 hover:border-[var(--violet-bright)]/60 hover:shadow-[0_0_30px_rgba(139,92,246,0.3)] transition-all group relative overflow-hidden bg-gradient-to-b from-[var(--violet-primary)]/10 to-transparent">
+                <GlassCard className="p-6 flex flex-col justify-between border-[var(--violet-primary)]/40 hover:border-[var(--violet-bright)]/60 hover:shadow-[0_0_30px_rgba(139,92,246,0.3)] transition-all group relative overflow-hidden bg-gradient-to-b from-[var(--violet-primary)]/10 to-transparent snap-center shrink-0 w-[85%] md:w-auto md:shrink">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-[var(--violet-primary)]/20 blur-xl rounded-full" />
                   <div className="space-y-4 relative z-10">
                     <div className="flex justify-between items-start">
@@ -309,7 +325,7 @@ export const WeddingPlanner: React.FC = () => {
                 </GlassCard>
 
                 {/* Custom Plan */}
-                <GlassCard className="p-6 flex flex-col justify-between border-pink-500/20 hover:border-pink-500/50 hover:shadow-[0_0_25px_rgba(236,72,153,0.15)] transition-all group relative overflow-hidden">
+                <GlassCard className="p-6 flex flex-col justify-between border-pink-500/20 hover:border-pink-500/50 hover:shadow-[0_0_25px_rgba(236,72,153,0.15)] transition-all group relative overflow-hidden snap-center shrink-0 w-[85%] md:w-auto md:shrink">
                   <div className="space-y-4">
                     <div className="flex justify-between items-start">
                       <span className="text-[10px] bg-pink-500/10 text-pink-300 font-bold px-2 py-0.5 rounded uppercase tracking-wider">Custom Plan</span>
@@ -333,6 +349,27 @@ export const WeddingPlanner: React.FC = () => {
                   </div>
                 </GlassCard>
 
+              </div>
+
+              {/* Slider Pagination Dots (Mobile Only) */}
+              <div className="flex justify-center gap-1.5 md:hidden mt-4">
+                {[0, 1, 2, 3].map((idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      if (packagesContainerRef.current) {
+                        const cardWidth = packagesContainerRef.current.clientWidth * 0.85;
+                        packagesContainerRef.current.scrollTo({ 
+                          left: idx * (cardWidth + 24), // cardWidth + gap
+                          behavior: 'smooth' 
+                        });
+                      }
+                    }}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      activePackageIndex === idx ? 'w-5 bg-[var(--violet-bright)]' : 'w-1.5 bg-white/20'
+                    }`}
+                  />
+                ))}
               </div>
             </section>
 
